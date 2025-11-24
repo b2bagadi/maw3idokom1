@@ -7,11 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  LogOut, 
-  Calendar, 
-  Settings, 
-  MessageCircle, 
+import {
+  LogOut,
+  Calendar,
+  Settings,
+  MessageCircle,
   Mail,
   CheckCircle,
   XCircle,
@@ -34,6 +34,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Menu } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from 'next-intl';
@@ -53,7 +61,7 @@ export default function BusinessDashboardPage() {
   const [selectedService, setSelectedService] = useState<any>(null);
   const [selectedStaff, setSelectedStaff] = useState<any>(null);
   const [logoUrl, setLogoUrl] = useState('');
-  
+
   // Data states
   const [appointments, setAppointments] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>({});
@@ -63,7 +71,7 @@ export default function BusinessDashboardPage() {
   const [staffForm, setStaffForm] = useState<any>({});
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [newGalleryUrl, setNewGalleryUrl] = useState('');
-  
+
   // Email form
   const [emailForm, setEmailForm] = useState({
     to: '',
@@ -262,7 +270,7 @@ export default function BusinessDashboardPage() {
     setIsLoading(true);
     try {
       const token = localStorage.getItem('business_token');
-      const endpoint = selectedService 
+      const endpoint = selectedService
         ? `/api/business/services/${selectedService.id}?id=${selectedService.id}`
         : '/api/business/services';
       const method = selectedService ? 'PUT' : 'POST';
@@ -294,7 +302,7 @@ export default function BusinessDashboardPage() {
 
   const handleDeleteService = async (serviceId: number) => {
     if (!confirm('Are you sure you want to delete this service?')) return;
-    
+
     setIsLoading(true);
     try {
       const token = localStorage.getItem('business_token');
@@ -321,7 +329,7 @@ export default function BusinessDashboardPage() {
     setIsLoading(true);
     try {
       const token = localStorage.getItem('business_token');
-      const endpoint = selectedStaff 
+      const endpoint = selectedStaff
         ? `/api/business/staff/${selectedStaff.id}?id=${selectedStaff.id}`
         : '/api/business/staff';
       const method = selectedStaff ? 'PUT' : 'POST';
@@ -353,7 +361,7 @@ export default function BusinessDashboardPage() {
 
   const handleDeleteStaff = async (staffId: number) => {
     if (!confirm('Are you sure you want to delete this staff member?')) return;
-    
+
     setIsLoading(true);
     try {
       const token = localStorage.getItem('business_token');
@@ -381,17 +389,17 @@ export default function BusinessDashboardPage() {
       toast.error('Please enter an image URL');
       return;
     }
-    
+
     if (galleryUrls.length >= 6) {
       toast.error('Maximum 6 images allowed');
       return;
     }
-    
+
     if (!newGalleryUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
       toast.error('Please enter a valid image URL (JPG, PNG, GIF, or WebP)');
       return;
     }
-    
+
     setGalleryUrls([...galleryUrls, newGalleryUrl]);
     setNewGalleryUrl('');
     toast.success('Image added! Remember to save changes');
@@ -407,11 +415,11 @@ export default function BusinessDashboardPage() {
     const name = appointment.guestName || 'Guest';
     const service = appointment.service?.nameEn || 'service';
     const date = new Date(appointment.startTime).toLocaleDateString();
-    
+
     const message = encodeURIComponent(
       `Hello ${name}, your appointment for ${service} on ${date} is confirmed. Looking forward to seeing you!`
     );
-    
+
     const url = `https://wa.me/${phone}?text=${message}`;
     window.open(url, '_blank');
   };
@@ -447,7 +455,7 @@ export default function BusinessDashboardPage() {
           </p>
         </div>
       )}
-      
+
       {appointments.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
@@ -504,7 +512,7 @@ export default function BusinessDashboardPage() {
                     </Button>
                   </>
                 )}
-                
+
                 {(appointment.status === 'CONFIRMED' || appointment.status === 'PENDING') && (
                   <>
                     {appointment.guestPhone && (
@@ -676,7 +684,7 @@ export default function BusinessDashboardPage() {
           Add Service
         </Button>
       </div>
-      
+
       {services.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
@@ -743,7 +751,7 @@ export default function BusinessDashboardPage() {
           Add Staff
         </Button>
       </div>
-      
+
       {staff.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
@@ -824,7 +832,7 @@ export default function BusinessDashboardPage() {
             </div>
           ))}
         </div>
-        
+
         {galleryUrls.length < 6 && (
           <div className="space-y-2">
             <Label>Add New Image URL</Label>
@@ -962,17 +970,92 @@ export default function BusinessDashboardPage() {
       </div>
 
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 bg-card border-b z-10 p-4">
-        {logoUrl && (
-          <Link href="/">
-            <img
-              src={logoUrl}
-              alt="Logo"
-              className="h-8 w-8 mb-2 object-contain cursor-pointer"
-            />
-          </Link>
-        )}
-        <h2 className="text-xl font-bold">Business Dashboard</h2>
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-card border-b z-10 p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {logoUrl && (
+            <Link href="/">
+              <img
+                src={logoUrl}
+                alt="Logo"
+                className="h-8 w-8 object-contain cursor-pointer"
+              />
+            </Link>
+          )}
+          <h2 className="text-xl font-bold">Business Dashboard</h2>
+        </div>
+
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 p-0">
+            <div className="p-6 border-b">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Business Dashboard
+              </h2>
+              {profile.nameEn && (
+                <p className="text-sm text-muted-foreground mt-1">{profile.nameEn}</p>
+              )}
+            </div>
+            <nav className="flex-1 p-4 space-y-2">
+              <Button
+                variant={activeSection === 'appointments' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('appointments')}
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Appointments
+                {pendingCount > 0 && (
+                  <Badge className="ml-auto bg-red-500">{pendingCount}</Badge>
+                )}
+              </Button>
+              <Button
+                variant={activeSection === 'profile' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('profile')}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Profile
+              </Button>
+              <Button
+                variant={activeSection === 'services' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('services')}
+              >
+                <Briefcase className="w-4 h-4 mr-2" />
+                Services
+              </Button>
+              <Button
+                variant={activeSection === 'staff' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('staff')}
+              >
+                <UserCog className="w-4 h-4 mr-2" />
+                Staff
+              </Button>
+              <Button
+                variant={activeSection === 'gallery' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('gallery')}
+              >
+                <ImageIcon className="w-4 h-4 mr-2" />
+                Gallery
+              </Button>
+            </nav>
+            <div className="p-4 border-t">
+              <Button
+                variant="outline"
+                className="w-full justify-start hover:bg-destructive hover:text-destructive-foreground transition-all duration-300"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
       {/* Main Content */}
@@ -1046,7 +1129,7 @@ export default function BusinessDashboardPage() {
                 <Label>Service Name (EN)</Label>
                 <Input
                   value={serviceForm.nameEn || ''}
-                  onChange={(e) => setServiceForm({...serviceForm, nameEn: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, nameEn: e.target.value })}
                   placeholder="Haircut"
                 />
               </div>
@@ -1054,7 +1137,7 @@ export default function BusinessDashboardPage() {
                 <Label>Description (EN)</Label>
                 <Textarea
                   value={serviceForm.descriptionEn || ''}
-                  onChange={(e) => setServiceForm({...serviceForm, descriptionEn: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, descriptionEn: e.target.value })}
                   placeholder="Professional haircut with styling"
                   rows={3}
                 />
@@ -1065,7 +1148,7 @@ export default function BusinessDashboardPage() {
                 <Label>Service Name (FR)</Label>
                 <Input
                   value={serviceForm.nameFr || ''}
-                  onChange={(e) => setServiceForm({...serviceForm, nameFr: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, nameFr: e.target.value })}
                   placeholder="Coupe de cheveux"
                 />
               </div>
@@ -1073,7 +1156,7 @@ export default function BusinessDashboardPage() {
                 <Label>Description (FR)</Label>
                 <Textarea
                   value={serviceForm.descriptionFr || ''}
-                  onChange={(e) => setServiceForm({...serviceForm, descriptionFr: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, descriptionFr: e.target.value })}
                   placeholder="Coupe professionnelle avec coiffage"
                   rows={3}
                 />
@@ -1084,7 +1167,7 @@ export default function BusinessDashboardPage() {
                 <Label>اسم الخدمة (AR)</Label>
                 <Input
                   value={serviceForm.nameAr || ''}
-                  onChange={(e) => setServiceForm({...serviceForm, nameAr: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, nameAr: e.target.value })}
                   placeholder="قص شعر"
                   dir="rtl"
                 />
@@ -1093,7 +1176,7 @@ export default function BusinessDashboardPage() {
                 <Label>الوصف (AR)</Label>
                 <Textarea
                   value={serviceForm.descriptionAr || ''}
-                  onChange={(e) => setServiceForm({...serviceForm, descriptionAr: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, descriptionAr: e.target.value })}
                   placeholder="قص شعر احترافي مع تصفيف"
                   rows={3}
                   dir="rtl"
@@ -1107,7 +1190,7 @@ export default function BusinessDashboardPage() {
               <Input
                 type="number"
                 value={serviceForm.price || ''}
-                onChange={(e) => setServiceForm({...serviceForm, price: parseFloat(e.target.value) || 0})}
+                onChange={(e) => setServiceForm({ ...serviceForm, price: parseFloat(e.target.value) || 0 })}
                 placeholder="50"
               />
             </div>
@@ -1116,7 +1199,7 @@ export default function BusinessDashboardPage() {
               <Input
                 type="number"
                 value={serviceForm.duration || ''}
-                onChange={(e) => setServiceForm({...serviceForm, duration: parseInt(e.target.value) || 30})}
+                onChange={(e) => setServiceForm({ ...serviceForm, duration: parseInt(e.target.value) || 30 })}
                 placeholder="30"
               />
             </div>
@@ -1150,7 +1233,7 @@ export default function BusinessDashboardPage() {
                 <Label>Staff Name (EN)</Label>
                 <Input
                   value={staffForm.nameEn || ''}
-                  onChange={(e) => setStaffForm({...staffForm, nameEn: e.target.value})}
+                  onChange={(e) => setStaffForm({ ...staffForm, nameEn: e.target.value })}
                   placeholder="John Smith"
                 />
               </div>
@@ -1160,7 +1243,7 @@ export default function BusinessDashboardPage() {
                 <Label>Staff Name (FR)</Label>
                 <Input
                   value={staffForm.nameFr || ''}
-                  onChange={(e) => setStaffForm({...staffForm, nameFr: e.target.value})}
+                  onChange={(e) => setStaffForm({ ...staffForm, nameFr: e.target.value })}
                   placeholder="Jean Dupont"
                 />
               </div>
@@ -1170,7 +1253,7 @@ export default function BusinessDashboardPage() {
                 <Label>اسم الموظف (AR)</Label>
                 <Input
                   value={staffForm.nameAr || ''}
-                  onChange={(e) => setStaffForm({...staffForm, nameAr: e.target.value})}
+                  onChange={(e) => setStaffForm({ ...staffForm, nameAr: e.target.value })}
                   placeholder="أحمد محمد"
                   dir="rtl"
                 />
@@ -1182,7 +1265,7 @@ export default function BusinessDashboardPage() {
               <Label>Role</Label>
               <Input
                 value={staffForm.role || ''}
-                onChange={(e) => setStaffForm({...staffForm, role: e.target.value})}
+                onChange={(e) => setStaffForm({ ...staffForm, role: e.target.value })}
                 placeholder="Hairstylist, Barber, etc."
               />
             </div>
@@ -1190,7 +1273,7 @@ export default function BusinessDashboardPage() {
               <Label>Photo URL</Label>
               <Input
                 value={staffForm.photoUrl || ''}
-                onChange={(e) => setStaffForm({...staffForm, photoUrl: e.target.value})}
+                onChange={(e) => setStaffForm({ ...staffForm, photoUrl: e.target.value })}
                 placeholder="https://..."
               />
             </div>

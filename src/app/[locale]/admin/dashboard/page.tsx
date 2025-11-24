@@ -7,14 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { 
-  LogOut, 
-  Building2, 
-  Users, 
-  Briefcase, 
-  UserCog, 
-  Calendar, 
-  Settings, 
+import {
+  LogOut,
+  Building2,
+  Users,
+  Briefcase,
+  UserCog,
+  Calendar,
+  Settings,
   Languages,
   Key,
   Search,
@@ -34,6 +34,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Menu } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,12 +70,12 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [logoUrl, setLogoUrl] = useState('');
-  
+
   // Dialog states
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
-  
+
   // Data states
   const [businesses, setBusinesses] = useState<any[]>([]);
   const [customers, setCustomers] = useState<any[]>([]);
@@ -193,12 +201,12 @@ export default function AdminDashboardPage() {
 
   const confirmDelete = async () => {
     if (!selectedItem) return;
-    
+
     setIsLoading(true);
     try {
       const token = localStorage.getItem('admin_token');
       let endpoint = '';
-      
+
       switch (activeSection) {
         case 'businesses':
           endpoint = `/api/admin/tenants/${selectedItem.id}`;
@@ -244,7 +252,7 @@ export default function AdminDashboardPage() {
 
       switch (activeSection) {
         case 'businesses':
-          endpoint = selectedItem 
+          endpoint = selectedItem
             ? `/api/admin/tenants/${selectedItem.id}`
             : '/api/admin/tenants';
           // Ensure password is included for new businesses
@@ -333,7 +341,7 @@ export default function AdminDashboardPage() {
               <Label>Business Name (EN) *</Label>
               <Input
                 value={formData.nameEn || ''}
-                onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
                 placeholder="Business name in English"
               />
             </div>
@@ -341,7 +349,7 @@ export default function AdminDashboardPage() {
               <Label>About (EN)</Label>
               <Textarea
                 value={formData.aboutEn || ''}
-                onChange={(e) => setFormData({...formData, aboutEn: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, aboutEn: e.target.value })}
                 placeholder="About business in English"
                 rows={3}
               />
@@ -352,7 +360,7 @@ export default function AdminDashboardPage() {
               <Label>Business Name (FR) *</Label>
               <Input
                 value={formData.nameFr || ''}
-                onChange={(e) => setFormData({...formData, nameFr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
                 placeholder="Business name in French"
               />
             </div>
@@ -360,7 +368,7 @@ export default function AdminDashboardPage() {
               <Label>About (FR)</Label>
               <Textarea
                 value={formData.aboutFr || ''}
-                onChange={(e) => setFormData({...formData, aboutFr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, aboutFr: e.target.value })}
                 placeholder="About business in French"
                 rows={3}
               />
@@ -371,7 +379,7 @@ export default function AdminDashboardPage() {
               <Label>اسم العمل (AR) *</Label>
               <Input
                 value={formData.nameAr || ''}
-                onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
                 placeholder="اسم العمل بالعربية"
                 dir="rtl"
               />
@@ -380,7 +388,7 @@ export default function AdminDashboardPage() {
               <Label>عن العمل (AR)</Label>
               <Textarea
                 value={formData.aboutAr || ''}
-                onChange={(e) => setFormData({...formData, aboutAr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, aboutAr: e.target.value })}
                 placeholder="عن العمل بالعربية"
                 rows={3}
                 dir="rtl"
@@ -388,13 +396,13 @@ export default function AdminDashboardPage() {
             </div>
           </TabsContent>
         </Tabs>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label>Owner Name *</Label>
             <Input
               value={formData.ownerName || ''}
-              onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
               placeholder="Owner name"
             />
           </div>
@@ -402,7 +410,7 @@ export default function AdminDashboardPage() {
             <Label>Email *</Label>
             <Input
               value={formData.email || ''}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="business@example.com"
             />
           </div>
@@ -410,7 +418,7 @@ export default function AdminDashboardPage() {
             <Label>Phone *</Label>
             <Input
               value={formData.phone || ''}
-              onChange={(e) => setFormData({...formData, phone: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               placeholder="Phone number"
             />
           </div>
@@ -418,7 +426,7 @@ export default function AdminDashboardPage() {
             <Label>Business Type *</Label>
             <Input
               value={formData.businessType || ''}
-              onChange={(e) => setFormData({...formData, businessType: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
               placeholder="Salon, Barbershop, etc."
             />
           </div>
@@ -428,7 +436,7 @@ export default function AdminDashboardPage() {
               <Input
                 type="password"
                 value={formData.password || ''}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="Business owner password"
                 autoComplete="off"
               />
@@ -455,7 +463,7 @@ export default function AdminDashboardPage() {
           <Label>Business *</Label>
           <Select
             value={formData.tenantId?.toString() || ''}
-            onValueChange={(value) => setFormData({...formData, tenantId: parseInt(value)})}
+            onValueChange={(value) => setFormData({ ...formData, tenantId: parseInt(value) })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select business" />
@@ -481,7 +489,7 @@ export default function AdminDashboardPage() {
               <Label>Service Name (EN) *</Label>
               <Input
                 value={formData.nameEn || ''}
-                onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
                 placeholder="Haircut, Massage, etc."
               />
             </div>
@@ -489,7 +497,7 @@ export default function AdminDashboardPage() {
               <Label>Description (EN)</Label>
               <Textarea
                 value={formData.descriptionEn || ''}
-                onChange={(e) => setFormData({...formData, descriptionEn: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
                 placeholder="Service description"
                 rows={2}
               />
@@ -500,7 +508,7 @@ export default function AdminDashboardPage() {
               <Label>Service Name (FR) *</Label>
               <Input
                 value={formData.nameFr || ''}
-                onChange={(e) => setFormData({...formData, nameFr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
                 placeholder="Coupe de cheveux, Massage, etc."
               />
             </div>
@@ -508,7 +516,7 @@ export default function AdminDashboardPage() {
               <Label>Description (FR)</Label>
               <Textarea
                 value={formData.descriptionFr || ''}
-                onChange={(e) => setFormData({...formData, descriptionFr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, descriptionFr: e.target.value })}
                 placeholder="Description du service"
                 rows={2}
               />
@@ -519,7 +527,7 @@ export default function AdminDashboardPage() {
               <Label>اسم الخدمة (AR) *</Label>
               <Input
                 value={formData.nameAr || ''}
-                onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
                 placeholder="قص شعر، مساج، إلخ"
                 dir="rtl"
               />
@@ -528,7 +536,7 @@ export default function AdminDashboardPage() {
               <Label>الوصف (AR)</Label>
               <Textarea
                 value={formData.descriptionAr || ''}
-                onChange={(e) => setFormData({...formData, descriptionAr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, descriptionAr: e.target.value })}
                 placeholder="وصف الخدمة"
                 rows={2}
                 dir="rtl"
@@ -543,7 +551,7 @@ export default function AdminDashboardPage() {
             <Input
               type="number"
               value={formData.duration || ''}
-              onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
+              onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
               placeholder="30"
             />
           </div>
@@ -553,7 +561,7 @@ export default function AdminDashboardPage() {
               type="number"
               step="0.01"
               value={formData.price || ''}
-              onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
+              onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
               placeholder="100.00"
             />
           </div>
@@ -578,7 +586,7 @@ export default function AdminDashboardPage() {
           <Label>Business *</Label>
           <Select
             value={formData.tenantId?.toString() || ''}
-            onValueChange={(value) => setFormData({...formData, tenantId: parseInt(value)})}
+            onValueChange={(value) => setFormData({ ...formData, tenantId: parseInt(value) })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select business" />
@@ -604,7 +612,7 @@ export default function AdminDashboardPage() {
               <Label>Staff Name (EN) *</Label>
               <Input
                 value={formData.nameEn || ''}
-                onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
                 placeholder="John Smith"
               />
             </div>
@@ -614,7 +622,7 @@ export default function AdminDashboardPage() {
               <Label>Staff Name (FR) *</Label>
               <Input
                 value={formData.nameFr || ''}
-                onChange={(e) => setFormData({...formData, nameFr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
                 placeholder="Jean Dupont"
               />
             </div>
@@ -624,7 +632,7 @@ export default function AdminDashboardPage() {
               <Label>اسم الموظف (AR) *</Label>
               <Input
                 value={formData.nameAr || ''}
-                onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
                 placeholder="أحمد محمد"
                 dir="rtl"
               />
@@ -637,7 +645,7 @@ export default function AdminDashboardPage() {
             <Label>Role *</Label>
             <Input
               value={formData.role || ''}
-              onChange={(e) => setFormData({...formData, role: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               placeholder="Barber, Therapist, etc."
             />
           </div>
@@ -645,7 +653,7 @@ export default function AdminDashboardPage() {
             <Label>Photo URL</Label>
             <Input
               value={formData.photoUrl || ''}
-              onChange={(e) => setFormData({...formData, photoUrl: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, photoUrl: e.target.value })}
               placeholder="https://example.com/photo.jpg"
             />
           </div>
@@ -670,7 +678,7 @@ export default function AdminDashboardPage() {
           <Label>Translation Key *</Label>
           <Input
             value={formData.key || ''}
-            onChange={(e) => setFormData({...formData, key: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, key: e.target.value })}
             placeholder="landing.welcome"
             disabled={!!selectedItem}
           />
@@ -680,7 +688,7 @@ export default function AdminDashboardPage() {
           <Label>Category</Label>
           <Input
             value={formData.category || ''}
-            onChange={(e) => setFormData({...formData, category: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
             placeholder="landing, common, etc."
           />
         </div>
@@ -696,7 +704,7 @@ export default function AdminDashboardPage() {
               <Label>English Text *</Label>
               <Textarea
                 value={formData.textEn || ''}
-                onChange={(e) => setFormData({...formData, textEn: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, textEn: e.target.value })}
                 placeholder="Welcome to our platform"
                 rows={3}
               />
@@ -707,7 +715,7 @@ export default function AdminDashboardPage() {
               <Label>French Text *</Label>
               <Textarea
                 value={formData.textFr || ''}
-                onChange={(e) => setFormData({...formData, textFr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, textFr: e.target.value })}
                 placeholder="Bienvenue sur notre plateforme"
                 rows={3}
               />
@@ -718,7 +726,7 @@ export default function AdminDashboardPage() {
               <Label>Arabic Text *</Label>
               <Textarea
                 value={formData.textAr || ''}
-                onChange={(e) => setFormData({...formData, textAr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, textAr: e.target.value })}
                 placeholder="مرحباً بك في منصتنا"
                 rows={3}
                 dir="rtl"
@@ -749,13 +757,13 @@ export default function AdminDashboardPage() {
           </Label>
           <Input
             value={formData.logoUrl || globalSettings.logoUrl || ''}
-            onChange={(e) => setFormData({...formData, logoUrl: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
             placeholder="https://example.com/logo.png"
           />
           {(formData.logoUrl || globalSettings.logoUrl) && (
-            <img 
-              src={formData.logoUrl || globalSettings.logoUrl} 
-              alt="Logo preview" 
+            <img
+              src={formData.logoUrl || globalSettings.logoUrl}
+              alt="Logo preview"
               className="mt-2 h-16 w-16 object-contain border rounded"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -778,7 +786,7 @@ export default function AdminDashboardPage() {
               <Label>Landing Hero Text (EN)</Label>
               <Input
                 value={formData.heroTextEn || globalSettings.heroTextEn || ''}
-                onChange={(e) => setFormData({...formData, heroTextEn: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, heroTextEn: e.target.value })}
                 placeholder="Welcome To Maw3id"
               />
             </div>
@@ -788,7 +796,7 @@ export default function AdminDashboardPage() {
               <Label>Landing Hero Text (FR)</Label>
               <Input
                 value={formData.heroTextFr || globalSettings.heroTextFr || ''}
-                onChange={(e) => setFormData({...formData, heroTextFr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, heroTextFr: e.target.value })}
                 placeholder="Bienvenue À Maw3id"
               />
             </div>
@@ -798,7 +806,7 @@ export default function AdminDashboardPage() {
               <Label>نص الصفحة الرئيسية (AR)</Label>
               <Input
                 value={formData.heroTextAr || globalSettings.heroTextAr || ''}
-                onChange={(e) => setFormData({...formData, heroTextAr: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, heroTextAr: e.target.value })}
                 placeholder="مرحباً بك في موعد"
                 dir="rtl"
               />
@@ -826,7 +834,7 @@ export default function AdminDashboardPage() {
           <Input
             type="password"
             value={formData.currentPassword || ''}
-            onChange={(e) => setFormData({...formData, currentPassword: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
             placeholder="Current password"
             autoComplete="off"
           />
@@ -836,7 +844,7 @@ export default function AdminDashboardPage() {
           <Input
             type="password"
             value={formData.newPassword || ''}
-            onChange={(e) => setFormData({...formData, newPassword: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
             placeholder="New password"
             autoComplete="off"
           />
@@ -846,7 +854,7 @@ export default function AdminDashboardPage() {
           <Input
             type="password"
             value={formData.confirmPassword || ''}
-            onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
             placeholder="Confirm new password"
             autoComplete="off"
           />
@@ -1165,13 +1173,13 @@ export default function AdminDashboardPage() {
                   </Label>
                   <Input
                     value={formData.logoUrl || globalSettings.logoUrl || ''}
-                    onChange={(e) => setFormData({...formData, logoUrl: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
                     placeholder="https://example.com/logo.png"
                   />
                   {(formData.logoUrl || globalSettings.logoUrl) && (
-                    <img 
-                      src={formData.logoUrl || globalSettings.logoUrl} 
-                      alt="Logo preview" 
+                    <img
+                      src={formData.logoUrl || globalSettings.logoUrl}
+                      alt="Logo preview"
                       className="mt-2 h-16 w-16 object-contain border rounded"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
@@ -1194,7 +1202,7 @@ export default function AdminDashboardPage() {
                       <Label>Landing Hero Text (EN)</Label>
                       <Input
                         value={formData.heroTextEn || globalSettings.heroTextEn || ''}
-                        onChange={(e) => setFormData({...formData, heroTextEn: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, heroTextEn: e.target.value })}
                         placeholder="Welcome To Maw3id"
                       />
                     </div>
@@ -1204,7 +1212,7 @@ export default function AdminDashboardPage() {
                       <Label>Landing Hero Text (FR)</Label>
                       <Input
                         value={formData.heroTextFr || globalSettings.heroTextFr || ''}
-                        onChange={(e) => setFormData({...formData, heroTextFr: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, heroTextFr: e.target.value })}
                         placeholder="Bienvenue À Maw3id"
                       />
                     </div>
@@ -1214,7 +1222,7 @@ export default function AdminDashboardPage() {
                       <Label>نص الصفحة الرئيسية (AR)</Label>
                       <Input
                         value={formData.heroTextAr || globalSettings.heroTextAr || ''}
-                        onChange={(e) => setFormData({...formData, heroTextAr: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, heroTextAr: e.target.value })}
                         placeholder="مرحباً بك في موعد"
                         dir="rtl"
                       />
@@ -1249,7 +1257,7 @@ export default function AdminDashboardPage() {
                   <Input
                     type="password"
                     value={formData.currentPassword || ''}
-                    onChange={(e) => setFormData({...formData, currentPassword: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
                     placeholder="Current password"
                     autoComplete="off"
                   />
@@ -1259,7 +1267,7 @@ export default function AdminDashboardPage() {
                   <Input
                     type="password"
                     value={formData.newPassword || ''}
-                    onChange={(e) => setFormData({...formData, newPassword: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
                     placeholder="New password"
                     autoComplete="off"
                   />
@@ -1269,7 +1277,7 @@ export default function AdminDashboardPage() {
                   <Input
                     type="password"
                     value={formData.confirmPassword || ''}
-                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                     placeholder="Confirm new password"
                     autoComplete="off"
                   />
@@ -1400,17 +1408,110 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 bg-card border-b z-10 p-4">
-        {logoUrl && (
-          <Link href="/">
-            <img
-              src={logoUrl}
-              alt="Logo"
-              className="h-8 w-8 mb-2 object-contain cursor-pointer"
-            />
-          </Link>
-        )}
-        <h2 className="text-xl font-bold">Super Admin</h2>
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-card border-b z-10 p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {logoUrl && (
+            <Link href="/">
+              <img
+                src={logoUrl}
+                alt="Logo"
+                className="h-8 w-8 object-contain cursor-pointer"
+              />
+            </Link>
+          )}
+          <h2 className="text-xl font-bold">Super Admin</h2>
+        </div>
+
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 p-0">
+            <div className="p-6 border-b">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-destructive to-primary bg-clip-text text-transparent">
+                Super Admin
+              </h2>
+            </div>
+            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+              <Button
+                variant={activeSection === 'businesses' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('businesses')}
+              >
+                <Building2 className="w-4 h-4 mr-2" />
+                Businesses
+              </Button>
+              <Button
+                variant={activeSection === 'customers' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('customers')}
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Customers
+              </Button>
+              <Button
+                variant={activeSection === 'services' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('services')}
+              >
+                <Briefcase className="w-4 h-4 mr-2" />
+                Services
+              </Button>
+              <Button
+                variant={activeSection === 'staff' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('staff')}
+              >
+                <UserCog className="w-4 h-4 mr-2" />
+                Staff
+              </Button>
+              <Button
+                variant={activeSection === 'appointments' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('appointments')}
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Appointments
+              </Button>
+              <Button
+                variant={activeSection === 'i18n' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('i18n')}
+              >
+                <Languages className="w-4 h-4 mr-2" />
+                Translations
+              </Button>
+              <Button
+                variant={activeSection === 'settings' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('settings')}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Global Settings
+              </Button>
+              <Button
+                variant={activeSection === 'password' ? 'default' : 'ghost'}
+                className="w-full justify-start transition-all duration-300"
+                onClick={() => setActiveSection('password')}
+              >
+                <Key className="w-4 h-4 mr-2" />
+                Change Password
+              </Button>
+            </nav>
+            <div className="p-4 border-t">
+              <Button
+                variant="outline"
+                className="w-full justify-start hover:bg-destructive hover:text-destructive-foreground transition-all duration-300"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
       {/* Main Content */}
@@ -1427,11 +1528,11 @@ export default function AdminDashboardPage() {
           <DialogHeader>
             <DialogTitle>
               {selectedItem ? 'Edit' : 'Create'} {
-                activeSection === 'businesses' ? 'Business' : 
-                activeSection === 'services' ? 'Service' :
-                activeSection === 'staff' ? 'Staff' :
-                activeSection === 'i18n' ? 'Translation' :
-                activeSection.charAt(0).toUpperCase() + activeSection.slice(1)
+                activeSection === 'businesses' ? 'Business' :
+                  activeSection === 'services' ? 'Service' :
+                    activeSection === 'staff' ? 'Staff' :
+                      activeSection === 'i18n' ? 'Translation' :
+                        activeSection.charAt(0).toUpperCase() + activeSection.slice(1)
               }
             </DialogTitle>
           </DialogHeader>
