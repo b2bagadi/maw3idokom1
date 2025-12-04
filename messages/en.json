@@ -1,0 +1,57 @@
+{
+    "common": {
+        "search": "Search",
+        "login": "Login",
+        "logout": "Logout",
+        "register": "Register",
+        "bookNow": "Book Now",
+        "viewDetails": "View Details",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "save": "Save",
+        "edit": "Edit",
+        "delete": "Delete"
+    },
+    "hero": {
+        "title": "Find & Book Appointments Anywhere",
+        "subtitle": "Discover the best professionals near you",
+        "searchWhat": "What service?",
+        "searchWhere": "Where?",
+        "searchWhen": "When?",
+        "searchButton": "Find & Book"
+    },
+    "categories": {
+        "beauty": "Beauty",
+        "health": "Health",
+        "auto": "Auto",
+        "legal": "Legal",
+        "education": "Education",
+        "fitness": "Fitness",
+        "art": "Art",
+        "homeServices": "Home Services"
+    },
+    "booking": {
+        "selectService": "Select Service",
+        "selectStaff": "Select Staff",
+        "selectDateTime": "Select Date & Time",
+        "confirmation": "Confirmation",
+        "anyStaff": "Any Available Staff",
+        "duration": "Duration",
+        "price": "Price",
+        "total": "Total",
+        "customerNote": "Note for business"
+    },
+    "admin": {
+        "dashboard": "Admin Dashboard",
+        "users": "Users",
+        "businesses": "Businesses",
+        "bookings": "Bookings",
+        "reviews": "Reviews",
+        "settings": "Settings",
+        "verify": "Verify",
+        "suspend": "Suspend",
+        "ban": "Ban",
+        "unban": "Unban",
+        "changePassword": "Change Password"
+    }
+}

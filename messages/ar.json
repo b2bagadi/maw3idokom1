@@ -1,0 +1,57 @@
+{
+    "common": {
+        "search": "بحث",
+        "login": "تسجيل الدخول",
+        "logout": "تسجيل الخروج",
+        "register": "التسجيل",
+        "bookNow": "احجز الآن",
+        "viewDetails": "عرض التفاصيل",
+        "cancel": "إلغاء",
+        "confirm": "تأكيد",
+        "save": "حفظ",
+        "edit": "تعديل",
+        "delete": "حذف"
+    },
+    "hero": {
+        "title": "ابحث واحجز المواعيد في أي مكان",
+        "subtitle": "اكتشف أفضل المحترفين بالقرب منك",
+        "searchWhat": "أي خدمة؟",
+        "searchWhere": "أين؟",
+        "searchWhen": "متى؟",
+        "searchButton": "ابحث واحجز"
+    },
+    "categories": {
+        "beauty": "الجمال",
+        "health": "الصحة",
+        "auto": "السيارات",
+        "legal": "القانونية",
+        "education": "التعليم",
+        "fitness": "اللياقة",
+        "art": "الفن",
+        "homeServices": "الخدمات المنزلية"
+    },
+    "booking": {
+        "selectService": "اختر الخدمة",
+        "selectStaff": "اختر الموظف",
+        "selectDateTime": "اختر التاريخ والوقت",
+        "confirmation": "التأكيد",
+        "anyStaff": "أي موظف متاح",
+        "duration": "المدة",
+        "price": "السعر",
+        "total": "المجموع",
+        "customerNote": "ملاحظة للأعمال"
+    },
+    "admin": {
+        "dashboard": "لوحة تحكم المسؤول",
+        "users": "المستخدمون",
+        "businesses": "الأعمال",
+        "bookings": "الحجوزات",
+        "reviews": "التقييمات",
+        "settings": "الإعدادات",
+        "verify": "تحقق",
+        "suspend": "تعليق",
+        "ban": "حظر",
+        "unban": "إلغاء الحظر",
+        "changePassword": "تغيير كلمة المرور"
+    }
+}
