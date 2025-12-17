@@ -1,0 +1,888 @@
+{
+  "users": [
+    {
+      "id": "cmj0cit6c00001skw5mfg7oqs",
+      "email": "M@w3id",
+      "password": "$2b$12$bQepEHsqhbI0SKXrfvOz3.r0Av2jF.v0mSUMJnxxiv/YLw3x6pQU2",
+      "role": "ADMIN",
+      "name": "Admin",
+      "phone": null,
+      "isActive": true,
+      "createdAt": "2025-12-10T18:31:47.504Z",
+      "updatedAt": "2025-12-10T18:31:47.504Z"
+    },
+    {
+      "id": "cmj0folne000111mnqmunc3ka",
+      "email": "auto.ecole.simulateur@gmail.com",
+      "password": "$2b$12$ZQmA5GXm8h2MuwCk4XLAcul5q/HLBCWjKH5ij0UXtT8N7MNYmodGu",
+      "role": "BUSINESS",
+      "name": "darnouvelle",
+      "phone": "+212648170158",
+      "isActive": true,
+      "createdAt": "2025-12-10T20:00:16.538Z",
+      "updatedAt": "2025-12-10T20:00:53.866Z"
+    },
+    {
+      "id": "cmj0fz4bp000m11mn5u64bdwq",
+      "email": "sehbani.a@gmail.com",
+      "password": "$2b$12$oIt1O.HNWsNbNDpwdfK8b.BQaq/xt5oV7KhCZ0d3sXXG9VS6ylEqu",
+      "role": "CLIENT",
+      "name": "NAIMA EL WARGUI",
+      "phone": "+212648170158",
+      "isActive": true,
+      "createdAt": "2025-12-10T20:08:27.302Z",
+      "updatedAt": "2025-12-10T20:08:27.302Z"
+    }
+  ],
+  "businesses": [
+    {
+      "id": "cmj0folpa000311mnnf4wxq73",
+      "userId": "cmj0folne000111mnqmunc3ka",
+      "name": "darnouvelle",
+      "logoUrl": "https://i.postimg.cc/Bbh7cwWz/gemini_3_pro_image_preview_nano_banana_pro_b_change_Maw3i_D_to_Maw_removebg_preview.png",
+      "heroUrl": "https://i.postimg.cc/N0zW7BDJ/a_need_to_put_my_logo.png",
+      "description": "Bes work ever",
+      "address": "Bloc 2 numero 301",
+      "lat": 30.3870409853193,
+      "lng": -9.570851325988771,
+      "phone": "+212648170158",
+      "averageRating": 4,
+      "totalReviews": 0,
+      "categoryId": "cmj0cit7e00011skwbz8z0gr8",
+      "subscriptionPlanId": null,
+      "createdAt": "2025-12-10T20:00:16.598Z",
+      "updatedAt": "2025-12-12T13:32:10.219Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cmj0cit7e00011skwbz8z0gr8",
+      "nameEn": "Beauty & Spa",
+      "nameFr": "Beauté & Spa",
+      "nameAr": "الجمال والمنتجع",
+      "emoji": "💅",
+      "createdAt": "2025-12-10T18:31:47.546Z",
+      "updatedAt": "2025-12-10T18:31:47.546Z",
+      "isFeatured": true
+    },
+    {
+      "id": "cmj0cit8200021skw91h8p5um",
+      "nameEn": "Hair Salon",
+      "nameFr": "Salon de Coiffure",
+      "nameAr": "صالون الحلاقة",
+      "emoji": "💇",
+      "createdAt": "2025-12-10T18:31:47.570Z",
+      "updatedAt": "2025-12-10T18:31:47.570Z",
+      "isFeatured": true
+    },
+    {
+      "id": "cmj0cit8i00031skwl9qpheiz",
+      "nameEn": "Medical",
+      "nameFr": "Médical",
+      "nameAr": "طبي",
+      "emoji": "🏥",
+      "createdAt": "2025-12-10T18:31:47.586Z",
+      "updatedAt": "2025-12-10T18:31:47.586Z",
+      "isFeatured": true
+    },
+    {
+      "id": "cmj0cit9e00041skwue9lxack",
+      "nameEn": "Fitness",
+      "nameFr": "Fitness",
+      "nameAr": "اللياقة البدنية",
+      "emoji": "💪",
+      "createdAt": "2025-12-10T18:31:47.619Z",
+      "updatedAt": "2025-12-10T18:31:47.619Z",
+      "isFeatured": true
+    },
+    {
+      "id": "cmj0cit9y00051skwhgkemogf",
+      "nameEn": "Automotive",
+      "nameFr": "Automobile",
+      "nameAr": "سيارات",
+      "emoji": "🚗",
+      "createdAt": "2025-12-10T18:31:47.638Z",
+      "updatedAt": "2025-12-10T18:31:47.638Z",
+      "isFeatured": true
+    },
+    {
+      "id": "cmj0citad00061skwc0pf5by7",
+      "nameEn": "Home Services",
+      "nameFr": "Services à Domicile",
+      "nameAr": "خدمات منزلية",
+      "emoji": "🏠",
+      "createdAt": "2025-12-10T18:31:47.654Z",
+      "updatedAt": "2025-12-10T18:31:47.654Z",
+      "isFeatured": true
+    },
+    {
+      "id": "cmj0citbb00071skw7lp1l01e",
+      "nameEn": "Restaurant",
+      "nameFr": "Restaurant",
+      "nameAr": "مطعم",
+      "emoji": "🍽️",
+      "createdAt": "2025-12-10T18:31:47.687Z",
+      "updatedAt": "2025-12-10T18:31:47.687Z",
+      "isFeatured": true
+    },
+    {
+      "id": "cmj0citc500081skwvsuj7t1a",
+      "nameEn": "Education",
+      "nameFr": "Éducation",
+      "nameAr": "تعليم",
+      "emoji": "📚",
+      "createdAt": "2025-12-10T18:31:47.718Z",
+      "updatedAt": "2025-12-10T18:31:47.718Z",
+      "isFeatured": true
+    }
+  ],
+  "services": [
+    {
+      "id": "cmj0fvfku000j11mn5r7xkfcl",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "name": "cool",
+      "description": "nice jobe",
+      "price": 30,
+      "duration": 30,
+      "isActive": true,
+      "createdAt": "2025-12-10T20:05:35.262Z",
+      "updatedAt": "2025-12-10T20:05:35.262Z"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "cmj0g2htl000o11mncppi75hu",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-11T00:00:00.000Z",
+      "time": "11:00",
+      "status": "CONFIRMED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-10T20:11:04.762Z",
+      "updatedAt": "2025-12-11T02:17:50.566Z"
+    },
+    {
+      "id": "cmj0q2ftd00015lyephvwk6do",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "09:30",
+      "status": "CONFIRMED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-11T00:50:58.230Z",
+      "updatedAt": "2025-12-11T02:17:58.020Z"
+    },
+    {
+      "id": "cmj0suqev000211l4eejysn1a",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-11T00:00:00.000Z",
+      "time": "10:00",
+      "status": "REJECTED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-11T02:08:57.655Z",
+      "updatedAt": "2025-12-11T02:17:56.254Z"
+    },
+    {
+      "id": "cmj0u1nyz000b11l4g37fz271",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-11T00:00:00.000Z",
+      "time": "10:30",
+      "status": "CONFIRMED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-11T02:42:20.699Z",
+      "updatedAt": "2025-12-11T02:44:29.000Z"
+    },
+    {
+      "id": "cmj0uwnc900082qiu6llr8dgr",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-11T00:00:00.000Z",
+      "time": "12:30",
+      "status": "CONFIRMED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-11T03:06:26.217Z",
+      "updatedAt": "2025-12-11T03:07:40.021Z"
+    },
+    {
+      "id": "cmj0wimal000lp1swvvm4x6hl",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": "cmj0fwc3f000l11mnvidhu62a",
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "10:00",
+      "status": "CONFIRMED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-11T03:51:30.909Z",
+      "updatedAt": "2025-12-12T10:57:28.574Z"
+    },
+    {
+      "id": "cmj2sw6mo0007xoyfvwvd3zov",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": "cmj0fwc3f000l11mnvidhu62a",
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "09:00",
+      "status": "CONFIRMED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-12T11:45:37.680Z",
+      "updatedAt": "2025-12-12T11:46:25.506Z"
+    },
+    {
+      "id": "cmj2sy1a60009xoyfapvgl6rw",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": "cmj0fwc3f000l11mnvidhu62a",
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "10:30",
+      "status": "REJECTED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-12T11:47:04.062Z",
+      "updatedAt": "2025-12-12T11:47:32.246Z"
+    },
+    {
+      "id": "cmj2tlrr20005hv72b07nd0tv",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "11:00",
+      "status": "CONFIRMED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-12T12:05:31.455Z",
+      "updatedAt": "2025-12-12T12:05:48.712Z"
+    },
+    {
+      "id": "cmj2u34q7000fhv72snxwk5df",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "11:30",
+      "status": "CONFIRMED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-12T12:19:01.423Z",
+      "updatedAt": "2025-12-12T12:19:17.537Z"
+    },
+    {
+      "id": "cmj2w52sa000lhv72hsw6vfnz",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "12:00",
+      "status": "COMPLETED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-12T13:16:31.451Z",
+      "updatedAt": "2025-12-12T13:43:29.686Z"
+    },
+    {
+      "id": "cmj2w8e6u000nhv72nhmvn6hp",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "12:30",
+      "status": "COMPLETED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-12T13:19:06.198Z",
+      "updatedAt": "2025-12-12T13:31:43.885Z"
+    },
+    {
+      "id": "cmj2wcn3t000phv7279izczol",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "serviceId": "cmj0fvfku000j11mn5r7xkfcl",
+      "staffId": null,
+      "date": "2025-12-12T00:00:00.000Z",
+      "time": "13:00",
+      "status": "COMPLETED",
+      "totalPrice": 30,
+      "notes": null,
+      "createdAt": "2025-12-12T13:22:24.378Z",
+      "updatedAt": "2025-12-12T13:31:08.054Z"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "cmj2wp74z000vhv72e8ldevqr",
+      "bookingId": "cmj2w8e6u000nhv72nhmvn6hp",
+      "clientId": "cmj0fz4bp000m11mn5u64bdwq",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "rating": 4,
+      "comment": "nice work",
+      "createdAt": "2025-12-12T13:32:10.212Z",
+      "updatedAt": "2025-12-12T13:32:10.212Z"
+    }
+  ],
+  "staff": [
+    {
+      "id": "cmj0fwc3f000l11mnvidhu62a",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "name": "Ayoub Sehbani",
+      "avatarUrl": "https://i.postimg.cc/Bbh7cwWz/gemini_3_pro_image_preview_nano_banana_pro_b_change_Maw3i_D_to_Maw_removebg_preview.png",
+      "role": "cooler",
+      "isActive": true,
+      "createdAt": "2025-12-10T20:06:17.402Z",
+      "updatedAt": "2025-12-10T20:06:17.402Z"
+    }
+  ],
+  "schedules": [
+    {
+      "id": "cmj0fom2f000511mntil56mx1",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "dayOfWeek": 0,
+      "openTime": "09:00",
+      "closeTime": "17:00",
+      "isClosed": false,
+      "createdAt": "2025-12-10T20:00:17.032Z",
+      "updatedAt": "2025-12-10T20:04:39.799Z"
+    },
+    {
+      "id": "cmj0fom2g000711mn99t80dwx",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "dayOfWeek": 1,
+      "openTime": "09:00",
+      "closeTime": "20:00",
+      "isClosed": false,
+      "createdAt": "2025-12-10T20:00:17.032Z",
+      "updatedAt": "2025-12-10T20:04:39.799Z"
+    },
+    {
+      "id": "cmj0fom2g000911mnsyjwjygy",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "dayOfWeek": 2,
+      "openTime": "09:00",
+      "closeTime": "20:00",
+      "isClosed": false,
+      "createdAt": "2025-12-10T20:00:17.032Z",
+      "updatedAt": "2025-12-10T20:04:39.799Z"
+    },
+    {
+      "id": "cmj0fom2g000b11mnhvi39ayl",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "dayOfWeek": 3,
+      "openTime": "09:00",
+      "closeTime": "20:00",
+      "isClosed": false,
+      "createdAt": "2025-12-10T20:00:17.032Z",
+      "updatedAt": "2025-12-10T20:04:39.799Z"
+    },
+    {
+      "id": "cmj0fom2g000d11mnp7m1k07y",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "dayOfWeek": 4,
+      "openTime": "09:00",
+      "closeTime": "20:00",
+      "isClosed": false,
+      "createdAt": "2025-12-10T20:00:17.032Z",
+      "updatedAt": "2025-12-10T20:04:39.799Z"
+    },
+    {
+      "id": "cmj0fom2g000f11mnpj15uumh",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "dayOfWeek": 5,
+      "openTime": "09:00",
+      "closeTime": "22:00",
+      "isClosed": false,
+      "createdAt": "2025-12-10T20:00:17.032Z",
+      "updatedAt": "2025-12-10T20:04:39.799Z"
+    },
+    {
+      "id": "cmj0fom2h000h11mn65g204pg",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "dayOfWeek": 6,
+      "openTime": "09:00",
+      "closeTime": "17:00",
+      "isClosed": true,
+      "createdAt": "2025-12-10T20:00:17.032Z",
+      "updatedAt": "2025-12-10T20:04:39.799Z"
+    }
+  ],
+  "emergencyBlocks": [],
+  "messages": [
+    {
+      "id": "cmj0t3jyp000411l47hwftee9",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "hi",
+      "createdAt": "2025-12-11T02:15:49.201Z"
+    },
+    {
+      "id": "cmj0t3pl5000611l4otzuddwi",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "hhh",
+      "createdAt": "2025-12-11T02:15:56.490Z"
+    },
+    {
+      "id": "cmj0t6jtj000811l4opfnjcji",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "hello",
+      "createdAt": "2025-12-11T02:18:08.983Z"
+    },
+    {
+      "id": "cmj0u2eq1000d11l4k8hlyyeb",
+      "bookingId": "cmj0u1nyz000b11l4g37fz271",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "hi",
+      "createdAt": "2025-12-11T02:42:55.369Z"
+    },
+    {
+      "id": "cmj0u2gky000f11l4xcnezi58",
+      "bookingId": "cmj0u1nyz000b11l4g37fz271",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "cc",
+      "createdAt": "2025-12-11T02:42:57.779Z"
+    },
+    {
+      "id": "cmj0u2icj000h11l4e2nrozam",
+      "bookingId": "cmj0u1nyz000b11l4g37fz271",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "kk",
+      "createdAt": "2025-12-11T02:43:00.067Z"
+    },
+    {
+      "id": "cmj0u4ly7000j11l4mfmxgkhe",
+      "bookingId": "cmj0u1nyz000b11l4g37fz271",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "hh",
+      "createdAt": "2025-12-11T02:44:38.047Z"
+    },
+    {
+      "id": "cmj0u4nfu000l11l4x4hb10p2",
+      "bookingId": "cmj0u1nyz000b11l4g37fz271",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "ff",
+      "createdAt": "2025-12-11T02:44:39.979Z"
+    },
+    {
+      "id": "cmj0u4pgv000n11l4y680m2ww",
+      "bookingId": "cmj0u1nyz000b11l4g37fz271",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "df",
+      "createdAt": "2025-12-11T02:44:42.607Z"
+    },
+    {
+      "id": "cmj0uuo4p00042qiuh6dzcafd",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "fff",
+      "createdAt": "2025-12-11T03:04:53.929Z"
+    },
+    {
+      "id": "cmj0uuwmm00062qiu1abdm70m",
+      "bookingId": "cmj0suqev000211l4eejysn1a",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "dddd",
+      "createdAt": "2025-12-11T03:05:04.942Z"
+    },
+    {
+      "id": "cmj0ux09m000a2qiu7zdwt9y6",
+      "bookingId": "cmj0uwnc900082qiu6llr8dgr",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "3aaaaaaaaaaa",
+      "createdAt": "2025-12-11T03:06:42.970Z"
+    },
+    {
+      "id": "cmj0vqvz40001p1swotvqrk44",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "edfdf",
+      "createdAt": "2025-12-11T03:29:57.088Z"
+    },
+    {
+      "id": "cmj0vqx840003p1swjxdi8xe6",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "525",
+      "createdAt": "2025-12-11T03:29:58.708Z"
+    },
+    {
+      "id": "cmj0vqy7h0005p1swzmjpmf06",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "553",
+      "createdAt": "2025-12-11T03:29:59.981Z"
+    },
+    {
+      "id": "cmj0vwt9q0007p1sw6zfqt6k3",
+      "bookingId": "cmj0suqev000211l4eejysn1a",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "1242",
+      "createdAt": "2025-12-11T03:34:33.518Z"
+    },
+    {
+      "id": "cmj0vwua60009p1swwa983exx",
+      "bookingId": "cmj0suqev000211l4eejysn1a",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "4242",
+      "createdAt": "2025-12-11T03:34:34.830Z"
+    },
+    {
+      "id": "cmj0vwv8h000bp1swqdbqprwp",
+      "bookingId": "cmj0suqev000211l4eejysn1a",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "252",
+      "createdAt": "2025-12-11T03:34:36.065Z"
+    },
+    {
+      "id": "cmj0whmeb000dp1swfwojm0bz",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "42424",
+      "createdAt": "2025-12-11T03:50:44.387Z"
+    },
+    {
+      "id": "cmj0whmug000fp1swe14dhjr0",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "55235",
+      "createdAt": "2025-12-11T03:50:44.969Z"
+    },
+    {
+      "id": "cmj0whowj000hp1swyhbc1dsk",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "424",
+      "createdAt": "2025-12-11T03:50:47.635Z"
+    },
+    {
+      "id": "cmj0whqw3000jp1swwp2itdhh",
+      "bookingId": "cmj0g2htl000o11mncppi75hu",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "4142",
+      "createdAt": "2025-12-11T03:50:50.211Z"
+    },
+    {
+      "id": "cmj20d3kf0001ldfrzqtcu8dl",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "hi",
+      "createdAt": "2025-12-11T22:26:57.998Z"
+    },
+    {
+      "id": "cmj21t8sp000122cez1ylunjc",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "rtyrty",
+      "createdAt": "2025-12-11T23:07:30.889Z"
+    },
+    {
+      "id": "cmj21tec7000322ce5gi7w3y6",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "rtytry",
+      "createdAt": "2025-12-11T23:07:38.072Z"
+    },
+    {
+      "id": "cmj21v0kh000522cek4nj5ddc",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0cit6c00001skw5mfg7oqs",
+      "text": "hi",
+      "createdAt": "2025-12-11T23:08:53.537Z"
+    },
+    {
+      "id": "cmj22308d000722ceotdq2hhq",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0cit6c00001skw5mfg7oqs",
+      "text": "dfghfgh",
+      "createdAt": "2025-12-11T23:15:06.349Z"
+    },
+    {
+      "id": "cmj2r4ni10001b42uq86tsatu",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "ggg",
+      "createdAt": "2025-12-12T10:56:13.561Z"
+    },
+    {
+      "id": "cmj2r56u70003b42udtzhs3sj",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "gg",
+      "createdAt": "2025-12-12T10:56:38.624Z"
+    },
+    {
+      "id": "cmj2r5tx90005b42u53jyo7zh",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "ggg",
+      "createdAt": "2025-12-12T10:57:08.541Z"
+    },
+    {
+      "id": "cmj2sdiek0001cyv9q1zhy3yw",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "sdfdf",
+      "createdAt": "2025-12-12T11:31:06.477Z"
+    },
+    {
+      "id": "cmj2sdu7j0003cyv9lsmgvayc",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "sdfdf",
+      "createdAt": "2025-12-12T11:31:21.775Z"
+    },
+    {
+      "id": "cmj2su2xa0001xoyfp9yaat55",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "111",
+      "createdAt": "2025-12-12T11:43:59.566Z"
+    },
+    {
+      "id": "cmj2suqbu0003xoyf5t6yaw8x",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "1111",
+      "createdAt": "2025-12-12T11:44:29.898Z"
+    },
+    {
+      "id": "cmj2sv0i30005xoyfimv0vs8d",
+      "bookingId": "cmj0wimal000lp1swvvm4x6hl",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "11111",
+      "createdAt": "2025-12-12T11:44:43.083Z"
+    },
+    {
+      "id": "cmj2tk2yx0001hv72p03s48j2",
+      "bookingId": "cmj2sy1a60009xoyfapvgl6rw",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "hhhh",
+      "createdAt": "2025-12-12T12:04:12.681Z"
+    },
+    {
+      "id": "cmj2tkjbr0003hv729257b3ib",
+      "bookingId": "cmj2sy1a60009xoyfapvgl6rw",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "hhhh",
+      "createdAt": "2025-12-12T12:04:33.879Z"
+    },
+    {
+      "id": "cmj2txeqm0007hv72p5ybelij",
+      "bookingId": "cmj2tlrr20005hv72b07nd0tv",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "dfgfg",
+      "createdAt": "2025-12-12T12:14:34.462Z"
+    },
+    {
+      "id": "cmj2u1t5p0009hv72okirejw1",
+      "bookingId": "cmj2tlrr20005hv72b07nd0tv",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "dfdsfd",
+      "createdAt": "2025-12-12T12:17:59.774Z"
+    },
+    {
+      "id": "cmj2u2775000bhv72jrancd3x",
+      "bookingId": "cmj2tlrr20005hv72b07nd0tv",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "sdfdsf",
+      "createdAt": "2025-12-12T12:18:17.969Z"
+    },
+    {
+      "id": "cmj2u2o8z000dhv72spgpam5e",
+      "bookingId": "cmj2tlrr20005hv72b07nd0tv",
+      "senderId": "cmj0fz4bp000m11mn5u64bdwq",
+      "text": "sdfsdfsd",
+      "createdAt": "2025-12-12T12:18:40.067Z"
+    },
+    {
+      "id": "cmj2u6yxi000hhv72p2er0omn",
+      "bookingId": "cmj2u34q7000fhv72snxwk5df",
+      "senderId": "cmj0folne000111mnqmunc3ka",
+      "text": "vbjfghj",
+      "createdAt": "2025-12-12T12:22:00.534Z"
+    },
+    {
+      "id": "cmj2w3k3f000jhv72fm0cxams",
+      "bookingId": "cmj2u34q7000fhv72snxwk5df",
+      "senderId": "cmj0cit6c00001skw5mfg7oqs",
+      "text": "hi",
+      "createdAt": "2025-12-12T13:15:20.572Z"
+    },
+    {
+      "id": "cmj2wnv6i000rhv720ixxrjim",
+      "bookingId": "cmj2wcn3t000phv7279izczol",
+      "senderId": "cmj0cit6c00001skw5mfg7oqs",
+      "text": "Your booking for cool is complete! Please leave a review",
+      "createdAt": "2025-12-12T13:31:08.059Z"
+    },
+    {
+      "id": "cmj2womu7000thv72o6epqw7z",
+      "bookingId": "cmj2w8e6u000nhv72nhmvn6hp",
+      "senderId": "cmj0cit6c00001skw5mfg7oqs",
+      "text": "Your booking for cool is complete! Please leave a review",
+      "createdAt": "2025-12-12T13:31:43.903Z"
+    }
+  ],
+  "globalSettings": [
+    {
+      "id": "cmj0citf2000c1skw8volmdyq",
+      "key": "logo_url",
+      "valueEn": "https://images.unsplash.com/photo-1557683316-973673baf926?w=200",
+      "valueFr": "https://images.unsplash.com/photo-1557683316-973673baf926?w=200",
+      "valueAr": "https://images.unsplash.com/photo-1557683316-973673baf926?w=200"
+    },
+    {
+      "id": "cmj0citfy000d1skw1mgo7gwr",
+      "key": "hero_image",
+      "valueEn": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920",
+      "valueFr": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920",
+      "valueAr": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920"
+    },
+    {
+      "id": "cmj0cith0000e1skwn90arhnn",
+      "key": "hero_title",
+      "valueEn": "Book Your Appointment Today",
+      "valueFr": "Réservez Votre Rendez-vous Aujourd'hui",
+      "valueAr": "احجز موعدك اليوم"
+    },
+    {
+      "id": "cmj0citi1000f1skwrgacqs7o",
+      "key": "hero_subtitle",
+      "valueEn": "Find and book local services in seconds",
+      "valueFr": "Trouvez et réservez des services locaux en quelques secondes",
+      "valueAr": "ابحث واحجز الخدمات المحلية في ثوانٍ"
+    },
+    {
+      "id": "cmj0citiw000g1skwl3t8j7xl",
+      "key": "contact_email",
+      "valueEn": "contact@maw3idokom.com",
+      "valueFr": "contact@maw3idokom.com",
+      "valueAr": "contact@maw3idokom.com"
+    },
+    {
+      "id": "cmj0citk1000h1skws7gmtca9",
+      "key": "contact_phone",
+      "valueEn": "+1 234 567 8900",
+      "valueFr": "+1 234 567 8900",
+      "valueAr": "+1 234 567 8900"
+    },
+    {
+      "id": "cmj0citkw000i1skwgjjmhobm",
+      "key": "facebook_url",
+      "valueEn": "https://www.facebook.com/profile.php?id=100085496883917",
+      "valueFr": "https://www.facebook.com/profile.php?id=100085496883917",
+      "valueAr": "https://www.facebook.com/profile.php?id=100085496883917"
+    },
+    {
+      "id": "cmj0citls000j1skw5m7pjfg4",
+      "key": "instagram_url",
+      "valueEn": "https://www.instagram.com/ayoubovic09/?hl=fr",
+      "valueFr": "https://www.instagram.com/ayoubovic09/?hl=fr",
+      "valueAr": "https://www.instagram.com/ayoubovic09/?hl=fr"
+    },
+    {
+      "id": "cmj0citm9000k1skw88nwy7vq",
+      "key": "twitter_url",
+      "valueEn": "https://twitter.com",
+      "valueFr": "https://twitter.com",
+      "valueAr": "https://twitter.com"
+    },
+    {
+      "id": "cmj0gejqx000p11mn2igqncqw",
+      "key": "system_logo_url",
+      "valueEn": "https://i.postimg.cc/pXhJ6dKh/seedream_4_high_res_fal_b_moor_realistic_and_3_removebg_preview.png",
+      "valueFr": "https://i.postimg.cc/pXhJ6dKh/seedream_4_high_res_fal_b_moor_realistic_and_3_removebg_preview.png",
+      "valueAr": "https://i.postimg.cc/pXhJ6dKh/seedream_4_high_res_fal_b_moor_realistic_and_3_removebg_preview.png"
+    },
+    {
+      "id": "cmj0qhy0b00025lyegg4p4q6x",
+      "key": "hero_background_url",
+      "valueEn": "https://i.postimg.cc/NFS37ts9/gemini-3-pro-image-preview-2k-(nano-banana-pro)-a-Abstract-digital-app-(2).png",
+      "valueFr": "https://i.postimg.cc/NFS37ts9/gemini-3-pro-image-preview-2k-(nano-banana-pro)-a-Abstract-digital-app-(2).png",
+      "valueAr": "https://i.postimg.cc/NFS37ts9/gemini-3-pro-image-preview-2k-(nano-banana-pro)-a-Abstract-digital-app-(2).png"
+    }
+  ],
+  "contactSubmissions": [],
+  "businessImages": [
+    {
+      "id": "cmj0us9qd00002qiu8idqe8wh",
+      "url": "https://i.postimg.cc/fyFR9gWm/logo_maw3id.png",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "createdAt": "2025-12-11T03:03:01.952Z"
+    },
+    {
+      "id": "cmj0us9qd00012qiu376ght55",
+      "url": "https://i.postimg.cc/WzT8rCRf/processed_image_1.png",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "createdAt": "2025-12-11T03:03:01.952Z"
+    },
+    {
+      "id": "cmj0us9qe00022qiu0avceqcz",
+      "url": "https://i.postimg.cc/Bbh7cwWz/gemini_3_pro_image_preview_nano_banana_pro_b_change_Maw3i_D_to_Maw_removebg_preview.png",
+      "businessId": "cmj0folpa000311mnnf4wxq73",
+      "createdAt": "2025-12-11T03:03:01.952Z"
+    }
+  ],
+  "subscriptionPlans": [
+    {
+      "id": "cmj0citcn00091skwemvbvi8a",
+      "name": "Basic",
+      "features": "Up to 5 services,Email support,Basic analytics",
+      "pricePerMonth": 2900,
+      "maxServices": 5,
+      "createdAt": "2025-12-10T18:31:47.736Z",
+      "updatedAt": "2025-12-10T18:31:47.736Z"
+    },
+    {
+      "id": "cmj0citdi000a1skwuwrmfns0",
+      "name": "Pro",
+      "features": "Up to 20 services,Priority support,Advanced analytics,Custom branding",
+      "pricePerMonth": 5900,
+      "maxServices": 20,
+      "createdAt": "2025-12-10T18:31:47.766Z",
+      "updatedAt": "2025-12-10T18:31:47.766Z"
+    },
+    {
+      "id": "cmj0cite0000b1skws0e49dbk",
+      "name": "Premium",
+      "features": "Unlimited services,24/7 support,Full analytics,API access,Custom integrations",
+      "pricePerMonth": 9900,
+      "maxServices": 1000,
+      "createdAt": "2025-12-10T18:31:47.784Z",
+      "updatedAt": "2025-12-10T18:31:47.784Z"
+    },
+    {
+      "id": "cmj0eh33g0000lhy979ja5spy",
+      "name": "Free",
+      "features": "free for 1er timers",
+      "pricePerMonth": 0,
+      "maxServices": 20,
+      "createdAt": "2025-12-10T19:26:26.282Z",
+      "updatedAt": "2025-12-10T19:26:26.282Z"
+    }
+  ]
+}
