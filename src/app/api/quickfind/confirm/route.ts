@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
         businessId,
         serviceId: business.services[0]?.id || '',
         date: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        time: '09:00',
+        totalPrice: business.services[0]?.price || 0,
         status: 'CONFIRMED',
       },
     });
