@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
 }
 
 model User {
@@ -17,10 +17,17 @@ model User {
   isActive       Boolean   @default(true)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  // Relations
+  givenRatings    Rating[]  @relation("GivenRatings")
+  receivedRatings Rating[]  @relation("ReceivedRatings")
+  
+  // Aggregates
+  avgRating       Float     @default(0)
+  totalRatings    Int       @default(0)
+  
   clientBookings Booking[] @relation("ClientBookings")
   business       Business?
   sentMessages   Message[] @relation("SentMessages")
-  clientReviews  Review[]  @relation("ClientReviews")
   quickfindPrefs ClientQuickfindPrefs[] @relation("ClientQuickfindPrefs")
   bookingRequests BookingRequest[] @relation("ClientBookingRequests")
   quickFindCredits Int @default(3)
@@ -54,7 +61,7 @@ model Business {
   user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   gallery            BusinessImage[]
   emergencyBlocks    EmergencyBlock[]
-  reviews            Review[]          @relation("BusinessReviews")
+
   schedules          Schedule[]
   services           Service[]
   staff              Staff[]
@@ -174,28 +181,30 @@ model Booking {
   service    Service?  @relation(fields: [serviceId], references: [id], onDelete: SetNull)
   staff      Staff?    @relation(fields: [staffId], references: [id])
   messages   Message[]
-  review     Review?
-
+  ratings    Rating[]
+  
   @@index([clientId])
   @@index([businessId])
   @@index([date])
   @@index([status])
 }
 
-model Review {
+model Rating {
   id         String   @id @default(cuid())
-  bookingId  String   @unique
-  clientId   String
-  businessId String
+  bookingId  String
+  raterId    String
+  rateeId    String
+  raterType  String   // 'client' or 'business'
   rating     Int
   comment    String?
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  
   booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  business   Business @relation("BusinessReviews", fields: [businessId], references: [id], onDelete: Cascade)
-  client     User     @relation("ClientReviews", fields: [clientId], references: [id], onDelete: Cascade)
+  rater      User     @relation("GivenRatings", fields: [raterId], references: [id])
+  ratee      User     @relation("ReceivedRatings", fields: [rateeId], references: [id])
 
-  @@index([businessId])
+  @@unique([bookingId, raterId])
+  @@index([rateeId])
   @@index([rating])
 }
 

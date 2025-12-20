@@ -14,12 +14,12 @@ async function importData() {
     // Import Users and build ID mapping
     console.log('Importing users...');
     const userIdMap: Record<string, string> = {};
-    
+
     for (const user of data.users) {
       const existing = await prisma.user.findUnique({
         where: { email: user.email },
       });
-      
+
       if (existing) {
         userIdMap[user.id] = existing.id;
         await prisma.user.update({
@@ -41,7 +41,7 @@ async function importData() {
       const existing = await prisma.category.findFirst({
         where: { nameEn: category.nameEn },
       });
-      
+
       if (existing) {
         await prisma.category.update({
           where: { id: existing.id },
@@ -61,7 +61,7 @@ async function importData() {
       const existing = await prisma.subscriptionPlan.findFirst({
         where: { name: plan.name },
       });
-      
+
       if (existing) {
         await prisma.subscriptionPlan.update({
           where: { id: existing.id },
@@ -132,6 +132,7 @@ async function importData() {
     }
     console.log(`✓ Imported ${data.bookings.length} bookings`);
 
+    /*
     // Import Reviews (with user ID mapping)
     console.log('Importing reviews...');
     for (const review of data.reviews) {
@@ -143,6 +144,7 @@ async function importData() {
       });
     }
     console.log(`✓ Imported ${data.reviews.length} reviews`);
+    */
 
     // Import Messages (skip if sender doesn't exist)
     console.log('Importing messages...');

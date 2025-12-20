@@ -24,9 +24,9 @@ async function getNewBusinesses() {
             orderBy: { createdAt: 'desc' },
             include: {
                 category: true,
-                reviews: true,
+                // reviews: true,
                 _count: {
-                    select: { bookings: true, reviews: true }
+                    select: { bookings: true /*, reviews: true */ }
                 }
             }
         });
@@ -41,15 +41,15 @@ async function getTrendingBusinesses() {
         const businesses = await prisma.business.findMany({
             include: {
                 category: true,
-                reviews: true,
+                // reviews: true,
                 _count: {
-                    select: { 
+                    select: {
                         bookings: {
                             where: {
                                 status: { in: ['COMPLETED', 'CONFIRMED'] }
                             }
                         },
-                        reviews: true
+                        // reviews: true
                     }
                 }
             }
@@ -59,7 +59,7 @@ async function getTrendingBusinesses() {
         const sorted = businesses
             .map(business => ({
                 ...business,
-                trendScore: (business._count.bookings * 2) + (business.averageRating * business._count.reviews)
+                trendScore: (business._count.bookings * 2) + (business.averageRating * (business.totalReviews || 0))
             }))
             .sort((a, b) => b.trendScore - a.trendScore)
             .slice(0, 3);
@@ -80,8 +80,8 @@ export default async function Home() {
         <div className="min-h-screen">
             <Hero />
             <Categories />
-            <LandingContent 
-                newBusinesses={newBusinesses} 
+            <LandingContent
+                newBusinesses={newBusinesses}
                 trendingBusinesses={trendingBusinesses}
             />
             <Footer />

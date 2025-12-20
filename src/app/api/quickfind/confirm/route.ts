@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { getPusherServer } from '@/lib/pusher/server';
+import { broadcastEvent } from '@/lib/websocket/server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,8 +34,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const pusher = getPusherServer();
-    await pusher.trigger(`user-${business.userId}`, 'booking_confirmed', {
+    await broadcastEvent(`user-${business.userId}`, 'booking_confirmed', {
       bookingId: booking.id,
       requestId,
     });

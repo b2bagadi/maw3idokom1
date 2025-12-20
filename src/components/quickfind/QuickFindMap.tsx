@@ -49,34 +49,27 @@ function createBusinessIcon(business: Business) {
   });
 }
 
-export default function QuickFindMap({ businesses, selectedBusiness }: { businesses: Business[], selectedBusiness?: Business | null }) {
+export default function QuickFindMap({
+  businesses,
+  selectedBusiness,
+  clientLocation
+}: {
+  businesses: Business[],
+  selectedBusiness?: Business | null,
+  clientLocation?: { lat: number; lng: number } | null
+}) {
   const { t } = useClientTranslation();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
-  
+
   // Default to Casablanca/Morocco center if no businesses
-  const defaultCenter: [number, number] = [33.5731, -7.5898]; 
-  
+  const defaultCenter: [number, number] = [33.5731, -7.5898];
+
   const [isClient, setIsClient] = useState(false);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     setIsClient(true);
-    // Get User Location
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-        },
-        (error) => {
-          console.log('Error getting location:', error);
-        }
-      );
-    }
   }, []);
 
   // Initialize Map
@@ -98,13 +91,13 @@ export default function QuickFindMap({ businesses, selectedBusiness }: { busines
 
     // Ensure no lingering map instance
     if (mapInstanceRef.current) {
-        try {
-          mapInstanceRef.current.remove();
-        } catch (e) {
-           console.warn('Map remove error', e);
-        }
-        mapInstanceRef.current = null;
-        markersRef.current = [];
+      try {
+        mapInstanceRef.current.remove();
+      } catch (e) {
+        console.warn('Map remove error', e);
+      }
+      mapInstanceRef.current = null;
+      markersRef.current = [];
     }
 
     try {
@@ -115,8 +108,8 @@ export default function QuickFindMap({ businesses, selectedBusiness }: { busines
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
     } catch (error) {
-       console.error("Error initializing map:", error);
-       // If initialization fails, try to recover or just stop
+      console.error("Error initializing map:", error);
+      // If initialization fails, try to recover or just stop
     }
 
     return () => {
@@ -144,19 +137,19 @@ export default function QuickFindMap({ businesses, selectedBusiness }: { busines
     const validBusinesses = businesses.filter(b => b.lat && b.lng);
 
     if (validBusinesses.length === 0) {
-        map.setView(defaultCenter, 11);
-        return;
+      map.setView(defaultCenter, 11);
+      return;
     }
 
     // Add new markers
     const bounds = L.latLngBounds([]);
-    
+
     validBusinesses.forEach(business => {
-        if (!business.lat || !business.lng) return;
-        
-        const marker = L.marker([business.lat, business.lng], {
-            icon: createBusinessIcon(business)
-        })
+      if (!business.lat || !business.lng) return;
+
+      const marker = L.marker([business.lat, business.lng], {
+        icon: createBusinessIcon(business)
+      })
         .bindPopup(`
             <div class="flex flex-col gap-2 min-w-[150px]">
               <div class="text-sm font-semibold">${business.name}</div>
@@ -174,16 +167,16 @@ export default function QuickFindMap({ businesses, selectedBusiness }: { busines
             </div>
         `)
         .addTo(map);
-        
-        markersRef.current.push(marker);
-        bounds.extend([business.lat, business.lng]);
+
+      markersRef.current.push(marker);
+      bounds.extend([business.lat, business.lng]);
     });
 
     // Add User Location Marker
-    if (userLocation) {
-        const userIcon = L.divIcon({
-            className: 'user-location-marker',
-            html: `<div style="
+    if (clientLocation) {
+      const userIcon = L.divIcon({
+        className: 'user-location-marker',
+        html: `<div style="
                 width: 20px;
                 height: 20px;
                 background-color: #3b82f6;
@@ -191,27 +184,27 @@ export default function QuickFindMap({ businesses, selectedBusiness }: { busines
                 border-radius: 50%;
                 box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
             "></div>`,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10],
-        });
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+      });
 
-          const userMarker = L.marker([userLocation.lat, userLocation.lng], { icon: userIcon })
-              .bindPopup(t('quickFind.youAreHere'))
-              .addTo(map);
+      const userMarker = L.marker([clientLocation.lat, clientLocation.lng], { icon: userIcon })
+        .bindPopup(t('quickFind.youAreHere', { defaultValue: 'You are here' }))
+        .addTo(map);
 
-        
-        markersRef.current.push(userMarker);
-        bounds.extend([userLocation.lat, userLocation.lng]);
+
+      markersRef.current.push(userMarker);
+      bounds.extend([clientLocation.lat, clientLocation.lng]);
     }
 
     // Fit bounds if we have markers or user location
-    if (validBusinesses.length > 0 || userLocation) {
-        if (bounds.isValid()) {
-            map.fitBounds(bounds, { padding: [50, 50] });
-        }
+    if (validBusinesses.length > 0 || clientLocation) {
+      if (bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [50, 50] });
+      }
     }
 
-  }, [businesses, isClient, userLocation]); // Run when businesses change or user location found
+  }, [businesses, isClient, clientLocation]); // Run when businesses change or client location changes
 
   if (!isClient) {
     return <div className="h-[300px] w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50" />;
@@ -219,9 +212,9 @@ export default function QuickFindMap({ businesses, selectedBusiness }: { busines
 
   return (
     <div className="h-[300px] w-full rounded-xl overflow-hidden shadow-inner border border-gray-200 relative z-0">
-      <div 
-        ref={mapContainerRef} 
-        style={{ height: '100%', width: '100%' }} 
+      <div
+        ref={mapContainerRef}
+        style={{ height: '100%', width: '100%' }}
       />
     </div>
   );

@@ -80,11 +80,10 @@ export default function BusinessDetails({ business }: BusinessDetailsProps) {
                                     <span>{business.address}</span>
                                 </div>
                                 <a
-                                    href={`https://www.google.com/maps/dir/?api=1&destination=${
-                                        business.lat && business.lng
+                                    href={`https://www.google.com/maps/dir/?api=1&destination=${business.lat && business.lng
                                             ? `${business.lat},${business.lng}`
                                             : encodeURIComponent(business.address)
-                                    }`}
+                                        }`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-sm text-blue-600 hover:text-blue-800 font-medium hover:underline flex items-center gap-1"
@@ -124,7 +123,7 @@ export default function BusinessDetails({ business }: BusinessDetailsProps) {
                                     <Star size={16} fill="currentColor" strokeWidth={0} className="mr-1" />
                                     {business.averageRating.toFixed(1)}
                                 </div>
-                                <span className="text-gray-500">({business._count.reviews} {t('business.reviews', { defaultValue: 'reviews' }).toLowerCase()})</span>
+                                <span className="text-gray-500">({business.totalReviews || 0} {t('business.reviews', { defaultValue: 'reviews' }).toLowerCase()})</span>
                             </div>
 
                             <div className="space-y-6">

@@ -56,9 +56,7 @@ export async function GET(req: Request) {
                     take: 1,
                     orderBy: { price: 'asc' }
                 },
-                _count: {
-                    select: { reviews: true }
-                }
+                // _count: { select: { reviews: true } }
             },
             orderBy: { averageRating: 'desc' }, // Default sort
         });

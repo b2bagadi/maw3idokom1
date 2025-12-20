@@ -5,12 +5,13 @@ import { useSearchParams } from 'next/navigation';
 import { Table } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'sonner';
-import { Check, X, MessageSquare } from 'lucide-react';
+import { Check, X, MessageSquare, Star } from 'lucide-react';
 import { formatDate, formatTime, getStatusColor, formatPrice } from '@/lib/utils';
 import BusinessChat from './BusinessChat';
 import { cn } from '@/lib/utils';
 
 import { useClientTranslation } from '@/i18n/client';
+import { RatingModal } from '@/components/rating/RatingModal';
 
 export default function BookingsTable() {
     const [bookings, setBookings] = useState<any[]>([]);
@@ -18,6 +19,7 @@ export default function BookingsTable() {
     const [chatBooking, setChatBooking] = useState<{ id: string; name: string } | null>(null);
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [dateFilter, setDateFilter] = useState<string>('');
+    const [rateBooking, setRateBooking] = useState<{ id: string; clientName: string; clientId: string } | null>(null);
     const { t } = useClientTranslation();
 
     const searchParams = useSearchParams();
@@ -28,7 +30,7 @@ export default function BookingsTable() {
             if (!res.ok) throw new Error('Failed');
             const data = await res.json();
             setBookings(data);
-            
+
             // Check for auto-open chat
             const chatBookingId = searchParams?.get('chatBookingId');
             const storedChatId = typeof window !== 'undefined' ? localStorage.getItem('chatBookingId') : null;
@@ -112,14 +114,24 @@ export default function BookingsTable() {
                         </>
                     )}
                     {b.status === 'CONFIRMED' && (
-                        <Button 
-                            size="sm" 
+                        <Button
+                            size="sm"
                             className="bg-blue-600 hover:bg-blue-700 text-white border-none"
-                            onClick={() => updateStatus(b.id, 'COMPLETED')} 
+                            onClick={() => updateStatus(b.id, 'COMPLETED')}
                             title={t('business.markCompleted', { defaultValue: 'Mark as Completed' })}
                         >
                             <Check size={16} className="mr-1" />
                             <span className="hidden md:inline">{t('common.complete', { defaultValue: 'Complete' })}</span>
+                        </Button>
+                    )}
+                    {b.status === 'COMPLETED' && (
+                        <Button
+                            size="sm"
+                            className="bg-yellow-500 hover:bg-yellow-600 text-white border-none"
+                            onClick={() => setRateBooking({ id: b.id, clientName: b.client.name, clientId: b.client.id })}
+                            title={t('rating.rateClient', { defaultValue: 'Rate Client' })}
+                        >
+                            <Star size={16} />
                         </Button>
                     )}
                     <Button
@@ -174,6 +186,20 @@ export default function BookingsTable() {
                     customerName={chatBooking.name}
                     isOpen={true}
                     onClose={() => setChatBooking(null)}
+                />
+            )}
+
+            {rateBooking && (
+                <RatingModal
+                    isOpen={true}
+                    onClose={() => setRateBooking(null)}
+                    bookingId={rateBooking.id}
+                    rateeId={rateBooking.clientId}
+                    rateeName={rateBooking.clientName}
+                    onSuccess={() => {
+                        toast.success(t('common.success', { defaultValue: 'Rating submitted' }));
+                        setRateBooking(null);
+                    }}
                 />
             )}
         </div>

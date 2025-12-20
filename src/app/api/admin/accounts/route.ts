@@ -23,7 +23,7 @@ export async function GET() {
                 _count: {
                     select: {
                         clientBookings: true,
-                        clientReviews: true,
+                        givenRatings: true,
                     }
                 }
             },

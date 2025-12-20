@@ -9,6 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import MapPicker from '@/components/ui/MapPicker';
 import { useClientTranslation } from '@/i18n/client';
+import { RatingDisplay } from '@/components/rating/RatingDisplay';
 
 interface Category {
     id: string;
@@ -18,7 +19,7 @@ interface Category {
 
 export default function ProfileEditor() {
     const [isLoading, setIsLoading] = useState(true);
-    const [galleryImages, setGalleryImages] = useState<Array<{url: string, deleteUrl: string}>>([]);
+    const [galleryImages, setGalleryImages] = useState<Array<{ url: string, deleteUrl: string }>>([]);
     const [categoryId, setCategoryId] = useState('');
     const [categories, setCategories] = useState<Category[]>([]);
     const { register, handleSubmit, control, setValue, watch, reset } = useForm();
@@ -40,11 +41,17 @@ export default function ProfileEditor() {
                 setGalleryImages(galleryData);
                 setCategoryId(businessData.categoryId || '');
                 setCategories(categoriesData);
+                setCategoryId(businessData.categoryId || '');
+                setCategories(categoriesData);
                 reset(businessData);
+                // Set rating state if needed, or just use values from form/data
+                setRatingInfo({ rating: businessData.averageRating || 0, count: businessData.totalReviews || 0 });
                 setIsLoading(false);
             })
             .catch(() => toast.error(t('profile.failedLoad')));
     }, [reset, t]);
+
+    const [ratingInfo, setRatingInfo] = useState({ rating: 0, count: 0 });
 
     const onSubmit = async (data: any) => {
         try {
@@ -56,13 +63,13 @@ export default function ProfileEditor() {
                     categoryId,
                 }),
             });
-            
+
             const responseData = await res.json();
-            
+
             if (!res.ok) {
                 throw new Error(responseData.message || responseData.error || 'Update failed');
             }
-            
+
             toast.success(t('profile.profileUpdated'));
         } catch (error: any) {
             console.error('Update error:', error);
@@ -75,6 +82,11 @@ export default function ProfileEditor() {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-4xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2 flex justify-between items-center bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                    <span className="font-semibold text-gray-700 dark:text-gray-200">{t('profile.yourRating', { defaultValue: 'Your Rating' })}</span>
+                    <RatingDisplay rating={ratingInfo.rating} totalRatings={ratingInfo.count} size={20} />
+                </div>
+
                 <Input label={t('profile.businessName')} {...register('name')} required />
                 <Input label={t('profile.phone')} {...register('phone')} required />
 
@@ -82,7 +94,7 @@ export default function ProfileEditor() {
                     <label className="block text-sm font-medium mb-2 dark:text-gray-300">
                         Category
                     </label>
-                    <select 
+                    <select
                         value={categoryId}
                         onChange={(e) => setCategoryId(e.target.value)}
                         className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white"

@@ -45,23 +45,48 @@ export default async function BusinessDetailPage({ params }: { params: Promise<{
             services: { orderBy: { price: 'asc' } },
             staff: true,
             gallery: true,
-            reviews: {
-                include: { client: true },
-                orderBy: { createdAt: 'desc' },
-                take: 10
-            },
-            _count: { select: { reviews: true } }
+            // reviews: {
+            //     include: { client: true },
+            //     orderBy: { createdAt: 'desc' },
+            //     take: 10
+            // },
+            // _count: { select: { reviews: true } }
         }
+    });
+
+    // Fetch ratings manually since relation is removed
+    const ratings = await prisma.rating.findMany({
+        where: { rateeId: business?.userId },
+        include: { rater: { select: { name: true } } },
+        orderBy: { createdAt: 'desc' },
+        take: 10
     });
 
     if (!business) {
         notFound();
     }
 
+    // Adapt ratings to match what BusinessDetails might expect (or update BusinessDetails)
+    // Assuming BusinessDetails might use the 'reviews' prop if passed, or we just pass the business object.
+    // If BusinessDetails reads business.reviews, we need to attach it or change BusinessDetails.
+    // Let's attach it as 'reviews' for compatibility if possible, but TypeScript might complain.
+    // Safer: pass ratings as a separate prop if I update BusinessDetails, or cast.
+
+    const businessWithRatings = {
+        ...business,
+        reviews: ratings.map((r: any) => ({
+            id: r.id,
+            rating: r.rating,
+            comment: r.comment,
+            createdAt: r.createdAt,
+            client: { name: r.rater.name }
+        }))
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
-            <BusinessHero business={business} />
-            <BusinessDetails business={business} />
+            <BusinessHero business={businessWithRatings} />
+            <BusinessDetails business={businessWithRatings} />
         </div>
     );
 }

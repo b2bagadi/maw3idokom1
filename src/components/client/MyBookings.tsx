@@ -9,7 +9,7 @@ import { formatDate, formatPrice, getStatusColor } from '@/lib/utils';
 import { MessageSquare, Star, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ClientChat from './ClientChat';
-import ReviewModal from './ReviewModal';
+import { RatingModal } from '@/components/rating/RatingModal';
 import { useClientTranslation } from '@/i18n/client';
 
 export default function MyBookings() {
@@ -183,11 +183,13 @@ export default function MyBookings() {
             )}
 
             {reviewBookingId && (
-                <ReviewModal
+                <RatingModal
                     bookingId={reviewBookingId}
+                    rateeId={bookings.find(b => typeof b.id === 'string' && b.id === reviewBookingId)?.business?.userId || ''}
+                    rateeName={bookings.find(b => typeof b.id === 'string' && b.id === reviewBookingId)?.business?.name || ''}
                     isOpen={true}
                     onClose={() => setReviewBookingId(null)}
-                    onReviewSubmitted={fetchBookings}
+                    onSuccess={fetchBookings}
                 />
             )}
         </div>

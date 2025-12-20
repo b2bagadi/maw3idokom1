@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { getPusherServer } from '@/lib/pusher/server';
+import { broadcastEvent } from '@/lib/websocket/server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { categoryId, offeredPrice, requestedTime, description } = await req.json();
+    const { categoryId, offeredPrice, requestedTime, description, clientLat, clientLng } = await req.json();
 
     // Check user credits
     const user = await prisma.user.findUnique({
@@ -32,21 +32,39 @@ export async function POST(req: NextRequest) {
       data: { quickFindCredits: { decrement: 1 } },
     });
 
-    const businesses = await prisma.business.findMany({
+    // Fetch businesses - filter by distance if location provided
+    let businesses = await prisma.business.findMany({
       where: {
         categoryId,
+        user: {
+          isActive: true,
+        },
       },
       include: {
         services: true,
         category: true,
+        user: {
+          select: {
+            id: true,
+            avgRating: true,
+            totalRatings: true,
+          },
+        },
       },
     });
 
-    const requestId = `req_${Date.now()}_${session.user.id}`;
-    const pusher = getPusherServer();
+    // Filter by proximity if client location provided
+    if (clientLat && clientLng) {
+      const { filterByDistance } = await import('@/lib/utils/distance');
+      const MAX_RADIUS_KM = 20; // 20km radius
+      businesses = filterByDistance(businesses, clientLat, clientLng, MAX_RADIUS_KM) as any; // Cast to preserve type
+    }
 
-    for (const business of businesses) {
-      await pusher.trigger(`user-${business.userId}`, 'new_request', {
+    const requestId = `req_${Date.now()}_${session.user.id}`;
+
+    // Use Promise.all for parallel broadcasting if multiple businesses
+    const broadcastPromises = businesses.map(business =>
+      broadcastEvent(`user-${business.userId}`, 'business:request_received', {
         requestId,
         clientId: session.user.id,
         clientName: session.user.name,
@@ -56,8 +74,13 @@ export async function POST(req: NextRequest) {
         description,
         categoryId,
         offeredPrice,
-      });
-    }
+        distance: (business as any).distance || null, // Include distance if available
+        businessRating: business.user?.avgRating || 0,
+        businessReviews: business.user?.totalRatings || 0,
+      })
+    );
+
+    await Promise.allSettled(broadcastPromises);
 
     return NextResponse.json({
       success: true,

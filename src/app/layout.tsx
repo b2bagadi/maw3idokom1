@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 
 import { FloatingBg } from '@/components/ui/FloatingBg';
 import Header from '@/components/layout/Header';
-import { PusherProvider } from '@/lib/websocket/pusher-context';
+import { WebSocketProvider } from '@/lib/websocket/socket-provider';
 import { RequestPopup } from '@/components/booking/RequestPopup';
 import { QuickFindButton } from '@/components/quickfind/QuickFindButton';
 
@@ -64,17 +64,17 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={inter.variable}>
-                  <Providers>
-                      <PusherProvider>
-                          <FloatingBg />
-                          <Header />
-                          <main className="min-h-screen bg-gray-50/50 dark:bg-gray-950/50 relative z-10 transition-colors duration-300">
-                              {children}
-                          </main>
-                          <RequestPopup />
-                          <QuickFindButton />
-                      </PusherProvider>
-                  </Providers>
+                <Providers>
+                    <WebSocketProvider>
+                        <FloatingBg />
+                        <Header />
+                        <main className="min-h-screen bg-gray-50/50 dark:bg-gray-950/50 relative z-10 transition-colors duration-300">
+                            {children}
+                        </main>
+                        <RequestPopup />
+                        <QuickFindButton />
+                    </WebSocketProvider>
+                </Providers>
             </body>
         </html>
     );

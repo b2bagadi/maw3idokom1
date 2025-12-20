@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import { usePusher } from '@/lib/websocket/pusher-context';
+import { useWebSocket } from '@/lib/websocket/socket-provider';
+import { WSEvents } from '@/lib/websocket/events';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useClientTranslation } from '@/i18n/client';
@@ -45,13 +46,14 @@ interface QuickFindModalProps {
 export function QuickFindModal({ onClose }: QuickFindModalProps) {
   const router = useRouter();
   const { data: session } = useSession();
-  const { userChannel } = usePusher();
+  const { subscribe } = useWebSocket();
   const { t, lng } = useClientTranslation();
   const [criteria, setCriteria] = useState({
     categoryId: '',
     maxPrice: 10000,
     time: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
-    minRating: 3
+    minRating: 3,
+    description: ''
   });
 
   const [categories, setCategories] = useState<Array<{ id: string; nameEn: string; nameFr?: string; nameAr?: string }>>([]);
@@ -60,6 +62,25 @@ export function QuickFindModal({ onClose }: QuickFindModalProps) {
   const [acceptedBusinesses, setAcceptedBusinesses] = useState<Business[]>([]);
   const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
   const lastSelectedBusinessRef = useRef<Business | null>(null);
+  const [clientLocation, setClientLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Request geolocation on mount
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setClientLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.warn('Geolocation error:', error);
+          // Continue without location - will broadcast to all businesses
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     fetch('/api/categories')
@@ -69,8 +90,6 @@ export function QuickFindModal({ onClose }: QuickFindModalProps) {
   }, []);
 
   useEffect(() => {
-    if (!userChannel) return;
-
     const handleRequestOffered = ({ businessId, businessName, price, address, lat, lng, logoUrl, requestId }: any) => {
       setRequestSent(true);
       setAcceptedBusinesses(prev => {
@@ -94,12 +113,14 @@ export function QuickFindModal({ onClose }: QuickFindModalProps) {
       localStorage.setItem('activeRequestId', requestId);
     };
 
-    userChannel.bind('request_offered', handleRequestOffered);
+    // Use WSEvents.REQUEST_OFFERED or the string 'request_offered' if that's what the server sends
+    // Ideally use WSEvents.REQUEST_OFFERED if we defined it
+    const unsubscribe = subscribe(WSEvents.REQUEST_OFFERED || 'request_offered', handleRequestOffered);
 
     return () => {
-      userChannel.unbind('request_offered', handleRequestOffered);
+      unsubscribe();
     };
-  }, [userChannel, onClose, router, t]);
+  }, [subscribe, onClose, router, t]);
 
   /* ... */
   const [credits, setCredits] = useState<number | null>(null);
@@ -135,7 +156,9 @@ export function QuickFindModal({ onClose }: QuickFindModalProps) {
         categoryId: criteria.categoryId,
         offeredPrice: criteria.maxPrice,
         requestedTime: criteria.time,
-        description: `Auto Quick Find request`
+        description: criteria.description || `Quick Find request`,
+        clientLat: clientLocation?.lat,
+        clientLng: clientLocation?.lng,
       }),
     });
 
@@ -268,6 +291,21 @@ export function QuickFindModal({ onClose }: QuickFindModalProps) {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('quickFind.description', { defaultValue: 'Service Description' })}</label>
+                <textarea
+                  value={criteria.description}
+                  onChange={(e) => setCriteria({ ...criteria, description: e.target.value })}
+                  placeholder={t('quickFind.descriptionPlaceholder', { defaultValue: 'Describe what you need... (optional)' })}
+                  rows={3}
+                  maxLength={300}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+                />
+                <div className="text-right text-xs text-gray-500 mt-1">
+                  {criteria.description.length}/300
+                </div>
+              </div>
+
               <div className="pt-4 space-y-3">
                 {credits !== null && credits <= 0 ? (
                   <div className="text-center">
@@ -349,6 +387,7 @@ export function QuickFindModal({ onClose }: QuickFindModalProps) {
               <QuickFindMap
                 businesses={acceptedBusinesses}
                 selectedBusiness={selectedBusiness}
+                clientLocation={clientLocation}
               />
 
               {/* Business Cards */}

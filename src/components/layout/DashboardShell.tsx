@@ -100,15 +100,15 @@ export function DashboardShell({
                                 {subtitle && <span className="text-xs text-gray-500 dark:text-gray-400 truncate">{subtitle}</span>}
                             </div>
                         </Link>
-                          <div className="flex items-center gap-3">
-                              {(userName || userEmail) && (
-                                  <div className="text-right hidden sm:block min-w-[140px]">
-                                      {userName && <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{userName}</div>}
-                                      {userEmail && <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{userEmail}</div>}
-                                  </div>
-                              )}
-                              {rightSlot && <div className="flex items-center gap-2">{rightSlot}</div>}
-                              <button
+                        <div className="flex items-center gap-3">
+                            {(userName || userEmail) && (
+                                <div className="text-right hidden sm:block min-w-[140px]">
+                                    {userName && <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{userName}</div>}
+                                    {userEmail && <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{userEmail}</div>}
+                                </div>
+                            )}
+                            {rightSlot && <div className="flex items-center gap-2">{rightSlot}</div>}
+                            <button
                                 type="button"
                                 className="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800"
                                 onClick={() => setMobileOpen((prev) => !prev)}
@@ -152,6 +152,9 @@ export function DashboardShell({
                     </section>
                 </div>
             </main>
+            <RatingListener />
         </div>
     );
 }
+
+import { RatingListener } from '@/components/rating/RatingListener';

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { getPusherServer } from '@/lib/pusher/server';
+import { broadcastEvent } from '@/lib/websocket/server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,9 +28,12 @@ export async function POST(req: NextRequest) {
 
     const parts = requestId.split('_');
     const clientId = parts.slice(2).join('_');
-    
-    const pusher = getPusherServer();
-    await pusher.trigger(`user-${clientId}`, 'request_offered', {
+
+    // Use broadcastEvent instead of Pusher
+    // Channel: user-{clientId}, Event: 'request_offered' (or WSEvents.REQUEST_OFFERED mapping)
+    // Server currently uses 'request_offered'.
+
+    await broadcastEvent(`user-${clientId}`, 'request_offered', {
       businessId: business.id,
       businessName: business.name,
       price: business.services[0]?.price || 0,

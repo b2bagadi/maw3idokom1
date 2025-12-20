@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { usePusher } from '@/lib/websocket/pusher-context';
+import { useWebSocket } from '@/lib/websocket/socket-provider';
+import { WSEvents } from '@/lib/websocket/events';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,90 +18,99 @@ interface RequestData {
 }
 
 export function RequestPopup() {
-    const { data: session } = useSession();
-    const { userChannel } = usePusher();
-    const [activeRequest, setActiveRequest] = useState<RequestData | null>(null);
-    const [timeLeft, setTimeLeft] = useState(120);
-    const [status, setStatus] = useState<'new' | 'waiting' | 'confirmed' | 'rejected'>('new');
-    const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(null);
-    const router = useRouter();
+  const { data: session } = useSession();
+  const { subscribe } = useWebSocket();
+  const [activeRequest, setActiveRequest] = useState<RequestData | null>(null);
+  const [timeLeft, setTimeLeft] = useState(120);
+  const [status, setStatus] = useState<'new' | 'waiting' | 'confirmed' | 'rejected'>('new');
+  const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(null);
+  const router = useRouter();
 
-    const goToChat = () => {
-      if (confirmedBookingId) {
-        localStorage.setItem('chatBookingId', confirmedBookingId);
-        router.push(`/business/dashboard?tab=bookings&chatBookingId=${confirmedBookingId}`);
-      } else {
-        router.push('/business/dashboard?tab=bookings');
-      }
-      closePopup();
-    };
+  const goToChat = () => {
+    if (confirmedBookingId) {
+      localStorage.setItem('chatBookingId', confirmedBookingId);
+      router.push(`/business/dashboard?tab=bookings&chatBookingId=${confirmedBookingId}`);
+    } else {
+      router.push('/business/dashboard?tab=bookings');
+    }
+    closePopup();
+  };
 
-    const closePopup = () => {
-      setActiveRequest(null);
-      localStorage.removeItem('pendingRequest');
+  const closePopup = () => {
+    setActiveRequest(null);
+    localStorage.removeItem('pendingRequest');
+    setStatus('new');
+    setConfirmedBookingId(null);
+  };
+
+  const handleAccept = async () => {
+    setStatus('waiting');
+    await fetch('/api/quickfind/response', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        requestId: activeRequest?.requestId,
+        action: 'accept'
+      }),
+    });
+  };
+
+  const handleReject = async () => {
+    await fetch('/api/quickfind/response', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        requestId: activeRequest?.requestId,
+        action: 'reject'
+      }),
+    });
+    closePopup();
+  };
+
+  useEffect(() => {
+    // NOTE: session.user.role check might need to be adjusted if session structure differs
+    if (!session?.user?.role || session.user.role !== 'BUSINESS') return;
+
+    const handleNewRequest = (request: RequestData) => {
+      setActiveRequest(request);
+      setTimeLeft(120);
       setStatus('new');
-      setConfirmedBookingId(null);
+      localStorage.setItem('pendingRequest', JSON.stringify(request));
+
+      const audio = new Audio('/sounds/notification.mp3');
+      audio.play().catch(() => undefined);
+
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('New Booking Request!', {
+          body: `${request.clientName} wants ${request.service} - ${request.price}`,
+          icon: '/icon-192.png'
+        });
+      }
     };
 
-    const handleAccept = async () => {
-      setStatus('waiting');
-      await fetch('/api/quickfind/response', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          requestId: activeRequest?.requestId,
-          action: 'accept'
-        }),
-      });
+    const handleBookingConfirmed = ({ bookingId }: { bookingId: string }) => {
+      setStatus('confirmed');
+      setConfirmedBookingId(bookingId);
+      const audio = new Audio('/sounds/success.mp3');
+      audio.play().catch(() => undefined);
     };
 
-    const handleReject = async () => {
-      await fetch('/api/quickfind/response', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          requestId: activeRequest?.requestId,
-          action: 'reject'
-        }),
-      });
-      closePopup();
+    // Events: 'new_request' and 'booking_confirmed' are legacy names. 
+    // Mapping to WSEvents.BUSINESS_REQUEST_RECEIVED ('business:request_received') and WSEvents.BOOKING_COMPLETED ('booking:completed')
+    // For Phase 1 migration completeness, we listen to BOTH or prefer the new ones if the Server is updated.
+    // Assuming Server sends 'business:request_received' now based on Phase 1 "Event Contract Definition".
+
+    const un1 = subscribe(WSEvents.BUSINESS_REQUEST_RECEIVED || 'business:request_received', handleNewRequest);
+    const un2 = subscribe(WSEvents.BOOKING_COMPLETED || 'booking:completed', handleBookingConfirmed);
+
+    // Keep legacy listener just in case during transition if needed, or remove if clean break.
+    // Instructions say "Complete removal", so we assume server sends new events.
+
+    return () => {
+      un1();
+      un2();
     };
-
-    useEffect(() => {
-      if (!userChannel || session?.user?.role !== 'BUSINESS') return;
-
-      const handleNewRequest = (request: RequestData) => {
-        setActiveRequest(request);
-        setTimeLeft(120);
-        setStatus('new');
-        localStorage.setItem('pendingRequest', JSON.stringify(request));
-        
-          const audio = new Audio('/sounds/notification.mp3');
-          audio.play().catch(() => undefined);
-
-        if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification('New Booking Request!', {
-            body: `${request.clientName} wants ${request.service} - ${request.price}`,
-            icon: '/icon-192.png'
-          });
-        }
-      };
-
-      const handleBookingConfirmed = ({ bookingId }: { bookingId: string }) => {
-          setStatus('confirmed');
-          setConfirmedBookingId(bookingId);
-            const audio = new Audio('/sounds/success.mp3');
-            audio.play().catch(() => undefined);
-      };
-
-      userChannel.bind('new_request', handleNewRequest);
-      userChannel.bind('booking_confirmed', handleBookingConfirmed);
-
-      return () => {
-        userChannel.unbind('new_request', handleNewRequest);
-        userChannel.unbind('booking_confirmed', handleBookingConfirmed);
-      };
-    }, [userChannel, session]);
+  }, [subscribe, session]);
 
   useEffect(() => {
     if (!activeRequest || status !== 'new') return;
@@ -120,9 +130,9 @@ export function RequestPopup() {
     <AnimatePresence>
       {activeRequest && (
         <div className="fixed inset-0 z-[9999] pointer-events-none flex items-end sm:items-center justify-center p-4 sm:p-6">
-          
+
           {/* Backdrop */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -138,129 +148,128 @@ export function RequestPopup() {
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
             className="bg-white dark:bg-gray-900 w-full max-w-md rounded-3xl shadow-2xl pointer-events-auto overflow-hidden relative"
           >
-            
+
             {/* Header / Status Bar */}
-            <div className={`h-2 w-full ${
-                status === 'new' ? 'bg-blue-500' :
-                status === 'waiting' ? 'bg-yellow-500 animate-pulse' :
+            <div className={`h-2 w-full ${status === 'new' ? 'bg-blue-500' :
+              status === 'waiting' ? 'bg-yellow-500 animate-pulse' :
                 status === 'confirmed' ? 'bg-green-500' :
-                'bg-red-500'
-            }`} />
+                  'bg-red-500'
+              }`} />
 
             <div className="p-6">
-                
-                {/* NEW REQUEST STATE */}
-                {status === 'new' && (
-                    <>
-                        <div className="flex justify-between items-start mb-6">
-                            <div>
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                    <span className="relative flex h-3 w-3">
-                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                      <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-                                    </span>
-                                    New Request
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Expires in {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</p>
-                            </div>
-                            <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-full">
-                                <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                            </div>
-                        </div>
 
-                        <div className="space-y-4 mb-8">
-                            <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
-                                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">👤</div>
-                                <div>
-                                    <p className="font-semibold text-gray-900 dark:text-white">{activeRequest.clientName}</p>
-                                    <p className="text-sm text-gray-500">Client</p>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
-                                    <p className="text-xs text-gray-500 uppercase font-bold mb-1">Service</p>
-                                    <p className="font-semibold text-gray-900 dark:text-white truncate">{activeRequest.service}</p>
-                                </div>
-                                <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
-                                    <p className="text-xs text-gray-500 uppercase font-bold mb-1">Offer</p>
-                                    <p className="font-bold text-green-600 text-lg">{activeRequest.price}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                                <Clock className="w-4 h-4" />
-                                <span className="text-sm font-medium">
-                                    {new Date(activeRequest.time).toLocaleDateString(undefined, {
-                                        weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-                                    })}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            <button 
-                                onClick={handleReject}
-                                className="py-3.5 px-4 rounded-xl font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
-                            >
-                                Decline
-                            </button>
-                            <button 
-                                onClick={handleAccept}
-                                className="py-3.5 px-4 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                            >
-                                Accept Request
-                            </button>
-                        </div>
-                    </>
-                )}
-
-                {/* WAITING STATE */}
-                {status === 'waiting' && (
-                    <div className="text-center py-8">
-                        <div className="relative w-20 h-20 mx-auto mb-6">
-                            <div className="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
-                            <div className="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
-                            <div className="absolute inset-0 flex items-center justify-center text-2xl">⏳</div>
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Waiting for Client</h3>
-                        <p className="text-gray-500">You've accepted the request. Waiting for client to confirm...</p>
+              {/* NEW REQUEST STATE */}
+              {status === 'new' && (
+                <>
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <span className="relative flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                        </span>
+                        New Request
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Expires in {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</p>
                     </div>
-                )}
-
-                {/* CONFIRMED STATE */}
-                {status === 'confirmed' && (
-                    <div className="text-center py-6">
-                        <motion.div 
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600"
-                        >
-                            <CheckCircle2 className="w-12 h-12" />
-                        </motion.div>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Booking Confirmed!</h3>
-                        <p className="text-gray-500 mb-8">The client has selected your offer.</p>
-                        
-                        <button 
-                            onClick={goToChat}
-                            className="w-full py-4 bg-green-600 text-white rounded-xl font-bold shadow-lg shadow-green-500/30 flex items-center justify-center gap-2 hover:bg-green-700 transition-colors"
-                        >
-                            <MessageCircle className="w-5 h-5" />
-                            Go to Chat
-                        </button>
+                    <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-full">
+                      <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                     </div>
-                )}
+                  </div>
 
-                {/* REJECTED / TAKEN STATE */}
-                {status === 'rejected' && (
-                    <div className="text-center py-8">
-                         <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-400">
-                            <X className="w-10 h-10" />
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Request Taken</h3>
-                        <p className="text-gray-500">Another business was selected.</p>
+                  <div className="space-y-4 mb-8">
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
+                      <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">👤</div>
+                      <div>
+                        <p className="font-semibold text-gray-900 dark:text-white">{activeRequest.clientName}</p>
+                        <p className="text-sm text-gray-500">Client</p>
+                      </div>
                     </div>
-                )}
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
+                        <p className="text-xs text-gray-500 uppercase font-bold mb-1">Service</p>
+                        <p className="font-semibold text-gray-900 dark:text-white truncate">{activeRequest.service}</p>
+                      </div>
+                      <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
+                        <p className="text-xs text-gray-500 uppercase font-bold mb-1">Offer</p>
+                        <p className="font-bold text-green-600 text-lg">{activeRequest.price}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                      <Clock className="w-4 h-4" />
+                      <span className="text-sm font-medium">
+                        {new Date(activeRequest.time).toLocaleDateString(undefined, {
+                          weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={handleReject}
+                      className="py-3.5 px-4 rounded-xl font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
+                    >
+                      Decline
+                    </button>
+                    <button
+                      onClick={handleAccept}
+                      className="py-3.5 px-4 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      Accept Request
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* WAITING STATE */}
+              {status === 'waiting' && (
+                <div className="text-center py-8">
+                  <div className="relative w-20 h-20 mx-auto mb-6">
+                    <div className="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
+                    <div className="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-2xl">⏳</div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Waiting for Client</h3>
+                  <p className="text-gray-500">You've accepted the request. Waiting for client to confirm...</p>
+                </div>
+              )}
+
+              {/* CONFIRMED STATE */}
+              {status === 'confirmed' && (
+                <div className="text-center py-6">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600"
+                  >
+                    <CheckCircle2 className="w-12 h-12" />
+                  </motion.div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Booking Confirmed!</h3>
+                  <p className="text-gray-500 mb-8">The client has selected your offer.</p>
+
+                  <button
+                    onClick={goToChat}
+                    className="w-full py-4 bg-green-600 text-white rounded-xl font-bold shadow-lg shadow-green-500/30 flex items-center justify-center gap-2 hover:bg-green-700 transition-colors"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    Go to Chat
+                  </button>
+                </div>
+              )}
+
+              {/* REJECTED / TAKEN STATE */}
+              {status === 'rejected' && (
+                <div className="text-center py-8">
+                  <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-400">
+                    <X className="w-10 h-10" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Request Taken</h3>
+                  <p className="text-gray-500">Another business was selected.</p>
+                </div>
+              )}
 
             </div>
           </motion.div>
