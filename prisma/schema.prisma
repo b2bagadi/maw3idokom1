@@ -1,0 +1,324 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  password       String
+  role           String
+  name           String
+  phone          String?
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  // Relations
+  givenRatings    Rating[]  @relation("GivenRatings")
+  receivedRatings Rating[]  @relation("ReceivedRatings")
+  
+  // Aggregates
+  avgRating       Float     @default(0)
+  totalRatings    Int       @default(0)
+  
+  clientBookings Booking[] @relation("ClientBookings")
+  business       Business?
+  sentMessages   Message[] @relation("SentMessages")
+  quickfindPrefs ClientQuickfindPrefs[] @relation("ClientQuickfindPrefs")
+  bookingRequests BookingRequest[] @relation("ClientBookingRequests")
+  quickFindCredits Int @default(3)
+
+  @@index([email])
+  @@index([role])
+}
+
+model Business {
+  id                 String            @id @default(cuid())
+  userId             String            @unique
+  name               String
+  logoUrl            String?
+  heroUrl            String?
+  description        String?
+  address            String
+  lat                Float?
+  lng                Float?
+  phone              String?
+  averageRating      Float             @default(0)
+  totalReviews       Int               @default(0)
+  categoryId         String
+  subscriptionPlanId String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  logoDeleteUrl      String?
+  heroDeleteUrl      String?
+  bookings           Booking[]         @relation("BusinessBookings")
+  category           Category          @relation(fields: [categoryId], references: [id])
+  subscriptionPlan   SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gallery            BusinessImage[]
+  emergencyBlocks    EmergencyBlock[]
+
+  schedules          Schedule[]
+  services           Service[]
+  staff              Staff[]
+  approvals          BusinessApproval[] @relation("BusinessApprovals")
+  acceptedRequests   BookingRequest[]   @relation("AcceptedRequests")
+  requestViews       BusinessRequestView[] @relation("BusinessRequestViews")
+
+  @@index([categoryId])
+  @@index([subscriptionPlanId])
+  @@index([averageRating])
+}
+
+model Category {
+  id         String     @id @default(cuid())
+  nameEn     String     @unique
+  nameFr     String
+  nameAr     String
+  emoji      String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  isFeatured Boolean    @default(true)
+  isActive   Boolean    @default(true)
+  businesses Business[]
+  quickfindPrefs ClientQuickfindPrefs[] @relation("QuickfindCategory")
+  businessApprovals BusinessApproval[] @relation("ApprovalCategory")
+  bookingRequests BookingRequest[] @relation("RequestCategory")
+}
+
+model SubscriptionPlan {
+  id            String     @id @default(cuid())
+  name          String     @unique
+  features      String
+  pricePerMonth Int
+  maxServices   Int        @default(10)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  businesses    Business[]
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  businessId  String
+  name        String
+  description String?
+  price       Int
+  duration    Int
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookings    Booking[]
+  business    Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([price])
+}
+
+model Staff {
+  id              String    @id @default(cuid())
+  businessId      String
+  name            String
+  avatarUrl       String?
+  role            String?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  avatarDeleteUrl String?
+  bookings        Booking[]
+  business        Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+model Schedule {
+  id         String   @id @default(cuid())
+  businessId String
+  dayOfWeek  Int
+  openTime   String?
+  closeTime  String?
+  isClosed   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, dayOfWeek])
+  @@index([businessId])
+}
+
+model EmergencyBlock {
+  id         String   @id @default(cuid())
+  businessId String
+  startDate  DateTime
+  endDate    DateTime
+  reason     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([startDate, endDate])
+}
+
+model Booking {
+  id         String    @id @default(cuid())
+  clientId   String
+  businessId String
+  serviceId  String?
+  staffId    String?
+  date       DateTime
+  time       String
+  status     String    @default("PENDING")
+  totalPrice Int
+  notes      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  business   Business  @relation("BusinessBookings", fields: [businessId], references: [id], onDelete: Cascade)
+  client     User      @relation("ClientBookings", fields: [clientId], references: [id], onDelete: Cascade)
+  service    Service?  @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  staff      Staff?    @relation(fields: [staffId], references: [id])
+  messages   Message[]
+  ratings    Rating[]
+  
+  @@index([clientId])
+  @@index([businessId])
+  @@index([date])
+  @@index([status])
+}
+
+model Rating {
+  id         String   @id @default(cuid())
+  bookingId  String
+  raterId    String
+  rateeId    String
+  raterType  String   // 'client' or 'business'
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+  
+  booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  rater      User     @relation("GivenRatings", fields: [raterId], references: [id])
+  ratee      User     @relation("ReceivedRatings", fields: [rateeId], references: [id])
+
+  @@unique([bookingId, raterId])
+  @@index([rateeId])
+  @@index([rating])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  bookingId String
+  senderId  String
+  text      String
+  createdAt DateTime @default(now())
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([createdAt])
+}
+
+model GlobalSettings {
+  id      String @id @default(cuid())
+  key     String @unique
+  valueEn String
+  valueFr String
+  valueAr String
+
+  @@index([key])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model BusinessImage {
+  id         String   @id @default(cuid())
+  url        String
+  businessId String
+  createdAt  DateTime @default(now())
+  deleteUrl  String?
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+model ClientQuickfindPrefs {
+  id           String   @id @default(cuid())
+  clientId     String
+  categoryId   String
+  maxPrice     Int
+  preferredTime DateTime?
+  radiusKm     Int      @default(25)
+  minRating    Float    @default(3.0)
+  createdAt    DateTime @default(now())
+
+  client   User     @relation("ClientQuickfindPrefs", fields: [clientId], references: [id], onDelete: Cascade)
+  category Category @relation("QuickfindCategory", fields: [categoryId], references: [id])
+
+  @@index([clientId])
+  @@index([categoryId])
+}
+
+model BusinessApproval {
+  id                    String   @id @default(cuid())
+  businessId            String
+  categoryId            String
+  approvedPrice         Int
+  approvedDurationMinutes Int
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+
+  business Business @relation("BusinessApprovals", fields: [businessId], references: [id], onDelete: Cascade)
+  category Category @relation("ApprovalCategory", fields: [categoryId], references: [id])
+
+  @@index([businessId])
+  @@index([categoryId])
+  @@index([isActive])
+}
+
+model BookingRequest {
+  id             String    @id @default(cuid())
+  clientId       String
+  categoryId     String
+  description    String?
+  offeredPrice   Int
+  requestedTime  DateTime
+  status         String    @default("PENDING")
+  acceptedBy     String?
+  createdAt      DateTime  @default(now())
+  expiresAt      DateTime
+
+  client          User                 @relation("ClientBookingRequests", fields: [clientId], references: [id], onDelete: Cascade)
+  category        Category             @relation("RequestCategory", fields: [categoryId], references: [id])
+  acceptedBusiness Business?           @relation("AcceptedRequests", fields: [acceptedBy], references: [id])
+  businessViews   BusinessRequestView[]
+
+  @@index([clientId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([expiresAt])
+}
+
+model BusinessRequestView {
+  id        String   @id @default(cuid())
+  businessId String
+  requestId  String
+  status     String   @default("PENDING")
+  viewedAt   DateTime @default(now())
+
+  business Business       @relation("BusinessRequestViews", fields: [businessId], references: [id], onDelete: Cascade)
+  request  BookingRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, requestId])
+  @@index([businessId])
+  @@index([requestId])
+}
